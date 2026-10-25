@@ -1,0 +1,573 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>System Editor Guide</title>
+<style>
+:root {
+  --bg: #2a2a2a; --panel: #333333; --line: #232323; --text: #c4c4c4; --dim: #a0a0a0; --faint: #808080;
+  --accent: #6fa3d8; --ok: #6fbf73; --warn: #e0a64a; --code: #1f1f1f;
+  --ui: "Segoe UI", system-ui, -apple-system, sans-serif; --mono: ui-monospace, "Cascadia Mono", Consolas, monospace;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) { --bg: #ffffff; --panel: #f5f7fa; --line: #dde3ea; --text: #1d2530; --dim: #4b5768; --faint: #7a8698; --accent: #1f6fd1; --ok: #1b8a4b; --warn: #9a6a00; --code: #eef2f6; }
+}
+:root[data-theme="dark"] { --bg: #383838; }
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.6 var(--ui); }
+.wrap { display: grid; grid-template-columns: 250px minmax(0, 1fr); max-width: 1180px; margin: 0 auto; }
+nav { position: sticky; top: 0; height: 100vh; overflow: auto; padding: 24px 12px 24px 20px; border-right: 1px solid var(--line); font-size: 13.5px; }
+nav b { display: block; margin: 0 0 10px; font-size: 14px; }
+nav a { display: block; color: var(--dim); text-decoration: none; padding: 3px 8px; border-radius: 4px; }
+nav a:hover { color: var(--text); background: var(--panel); }
+nav .grp { margin: 14px 0 4px 8px; color: var(--faint); font-size: 11px; text-transform: uppercase; letter-spacing: .06em; }
+main { padding: 28px 40px 80px; min-width: 0; }
+h1 { font-size: 28px; margin: 0 0 6px; }
+h2 { font-size: 21px; margin: 46px 0 10px; padding-top: 10px; border-top: 1px solid var(--line); }
+h3 { font-size: 16px; margin: 24px 0 6px; }
+p, li { color: var(--text); }
+.lead { color: var(--dim); font-size: 16px; margin-top: 0; }
+a { color: var(--accent); }
+code, kbd { font: 13px var(--mono); background: var(--code); padding: 1px 5px; border-radius: 4px; }
+kbd { border: 1px solid var(--line); border-bottom-width: 2px; }
+pre { background: var(--code); padding: 10px 12px; border-radius: 6px; overflow-x: auto; font: 13px/1.5 var(--mono); }
+ol.steps { padding-left: 22px; } ol.steps li { margin: 4px 0; }
+.note, .tip { border-left: 3px solid var(--warn); background: var(--panel); padding: 8px 14px; border-radius: 0 6px 6px 0; margin: 12px 0; }
+.tip { border-color: var(--ok); }
+table { border-collapse: collapse; width: 100%; margin: 10px 0; font-size: 14px; }
+th, td { text-align: left; padding: 6px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { color: var(--dim); font-weight: 600; }
+.menu { font-weight: 600; white-space: nowrap; }
+@media (max-width: 820px) {
+  .wrap { display: block; }
+  nav { position: static; height: auto; border-right: 0; border-bottom: 1px solid var(--line); padding: 16px; }
+  main { padding: 20px 16px 60px; }
+}
+</style>
+<script>try { const t = new URLSearchParams(location.search).get('theme'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}</script>
+</head>
+<body>
+<div class="wrap">
+<nav>
+  <b>Freelancer System Editor</b>
+  <a href="manual.html" style="color:var(--accent)">Manual: step-by-step walkthroughs →</a>
+  <div class="grp">Basics</div>
+  <a href="#start">Getting started</a>
+  <a href="#window">The window</a>
+  <a href="#viewpresets">View presets</a>
+  <a href="#bulk">Editing several at once</a>
+  <a href="#safety">Saving, undo &amp; backups</a>
+  <a href="#snapshots">Snapshots</a>
+  <a href="#testkit">In-game test kit</a>
+  <div class="grp">Systems</div>
+  <a href="#editing">Editing a system</a>
+  <a href="#wizard">New system wizard</a>
+  <a href="#routes">Routes</a>
+  <a href="#recipes">Step-by-step recipes</a>
+  <a href="#zones">Zones, fields &amp; nebulae</a>
+  <a href="#population">Encounters &amp; paths</a>
+  <a href="#visuals">Suns, rings &amp; lights</a>
+  <div class="grp">Game data</div>
+  <a href="#names">Names &amp; infocards</a>
+  <a href="#trade">Markets &amp; trade planner</a>
+  <a href="#bars">Base characters &amp; news</a>
+  <a href="#ships">Ships, equipment &amp; loadouts</a>
+  <a href="#balance">Balance tables</a>
+  <a href="#factions">Faction relations</a>
+  <a href="#translate">Translation</a>
+  <a href="#models">Models &amp; hardpoints</a>
+  <a href="#materials">Materials &amp; textures</a>
+  <a href="#import">Import &amp; export models</a>
+  <a href="#anim">Animations</a>
+  <a href="#thn">Cutscenes</a>
+  <a href="#chars">Characters</a>
+  <a href="#interiors">Base interiors</a>
+  <a href="#audio">Sounds &amp; voices</a>
+  <a href="#fx">Particle effects</a>
+  <a href="#missions">Mission scripts</a>
+  <a href="#missionmap">Mission map (3D)</a>
+  <a href="#msnwizard">New mission wizard</a>
+  <a href="#npcships">NPC ships</a>
+  <a href="#saves">Save games</a>
+  <div class="grp">More</div>
+  <a href="#review">Review changes</a>
+  <a href="#mods">Mods: export, install, conflicts</a>
+  <a href="#server">Server tools (multiplayer)</a>
+  <a href="#preflight">Pre-flight check</a>
+  <a href="#patches">Patch manager</a>
+  <a href="#rendering">How models are drawn</a>
+  <a href="#refs">References &amp; rename</a>
+  <a href="#playtest">Playtest here</a>
+  <a href="#spawnsim">Spawn simulator</a>
+  <a href="#keys-ref">INI key reference</a>
+  <a href="#crash">Crash &amp; log analyser</a>
+  <a href="#checks">Validation &amp; tools</a>
+  <a href="#vscode">VS Code extension</a>
+  <a href="#bigmods">Large mods</a>
+  <a href="#updatepatch">Update patch</a>
+  <a href="#trouble">Troubleshooting</a>
+  <a href="#keys">Keyboard &amp; mouse</a>
+</nav>
+<main>
+<h1>Freelancer System Editor — user guide</h1>
+<p class="lead">A local editor for Freelancer's game data: star systems in 3D, plus markets, bars, ships, effects, missions and save games. Every change is written into the game's own INI, UTF and DLL files, so the game picks it up directly.</p>
+
+<h2 id="start">Getting started</h2>
+<ol class="steps">
+  <li>Close Freelancer if it is running (Windows locks the resource DLLs while the game is open).</li>
+  <li>Double-click <code>start.bat</code> in the <code>system-editor</code> folder. A console window opens and the editor opens in your browser at <code>http://localhost:5717</code>. Keep the console open while you work.</li>
+  <li>The editor finds <code>..\Freelancer HD Edition</code> on its own. For another install (for example a Discovery folder), choose <span class="menu">File → Game folder…</span> and click <b>Browse…</b> to pick it in a folder dialog (picking its DATA or EXE folder works too). In VS Code the choice is remembered in the extension's settings.</li>
+  <li>The first system opens. Use the <b>Systems</b> tab on the left, the universe map, or <kbd>Ctrl</kbd>+<kbd>F</kbd> to move to another one.</li>
+</ol>
+<div class="tip">Work on a copy of your install, or at least keep the automatic backups (see <a href="#safety">Saving</a>). Chrome or Edge is recommended.</div>
+
+<h2 id="window">The window</h2>
+<table>
+<tr><th>Area</th><th>What it does</th></tr>
+<tr><td>Menu bar</td><td><b>File</b> (save, reload, raw INI, backups, game folder), <b>Edit</b>, <b>Create</b> (objects, zones, lanes, jump connections, bases, systems), <b>View</b> (what is drawn), <b>Tools</b> (all the data editors in this guide), <b>Help</b>.</td></tr>
+<tr><td>Outliner (left)</td><td>Every object, zone and light in the system. Rows are grouped by kind and category; the <b>eyes</b> on kinds, categories and rows decide what the 3D view draws (see <a href="#viewpresets">Eyes and views</a>). Type to search; <code>key=value</code> searches entries (<code>loadout=li_</code>). ⚙ filters by type, faction, zone kind, base or loadout. Trade lanes are grouped into one row each.</td></tr>
+<tr><td>3D view (centre)</td><td>The system with real models, planets, starsphere, fields and effects. <kbd>T</kbd> toggles the top-down navmap view with its A–H / 1–8 grid.</td></tr>
+<tr><td>Properties (right)</td><td>Everything about the selection: position, rotation, archetype, the in-game name and infocard, every INI entry, plus panels for bases, zones, suns, rings and lights.</td></tr>
+<tr><td>Toolbar</td><td>Select / Move / Rotate gizmo, World or Local axes, Snap, 3D or Top view, Frame, and the <b>View</b> preset list (see below).</td></tr>
+<tr><td>Status bar</td><td>Messages, and the number of unsaved files (top right).</td></tr>
+</table>
+<h3 id="viewpresets">Eyes and views</h3>
+<p>What the 3D view draws is set in the Outliner on three levels, each with an eye: <b>kind</b> (Objects, Zones, Light sources), <b>category</b> (Suns &amp; planets, Stations &amp; docking, Jump gates &amp; holes, Trade lanes, Platforms &amp; satellites, Other objects; Asteroid fields, Nebulae, Encounter zones, Patrol &amp; trade paths, Exclusion, Death, Other zones) and <b>item</b>. An item is drawn when all three are on. Kinds and categories apply in every system, item eyes per system; nothing is written to the INI. Crossed-out eye = off here; faded = a level above is off (click to show only this one); eye with a dot = some items inside hidden. <kbd>H</kbd> hides the selection, <kbd>Shift+H</kbd> everything else, <kbd>Alt+H</kbd> shows all. A selected hidden zone or light is still drawn; a selected hidden object keeps its selection box. <b>◎ Only listed</b> draws only what the Outliner list shows (search, ⚙ filters) — e.g. one faction.</p>
+<p>The <b>View</b> dropdown sets the kind and category eyes (and labels, paths, grids) in one go: <b>Standard</b> (default: no patrol paths, encounter or other zones), <b>Everything</b>, <b>Bases, lanes &amp; jumps</b>, <b>Zones</b>, <b>Encounters &amp; patrols</b>, <b>Defences</b>, <b>Fields &amp; hazards</b>, <b>Clean (screenshots)</b>. Tick several to combine them (union); Standard, Everything and Clean are single choices. Clicking a category eye by hand shows <b>Custom</b>. <b>Save current view…</b> stores the eyes and display switches as your own view; <b>Manage saved views…</b> renames, updates or deletes them. Views from older versions are converted (their object types become categories; faction rules are dropped — use ⚙ + Only listed).</p>
+<h3 id="bulk">Editing several items at once</h3>
+<p>With more than one item selected, Properties shows the bulk tools. <b>Shared entries</b> lists every entry of the selected items: a plain value is the same everywhere, <i>mixed · N values</i> differs (hover for the list), <i>4/6</i> means only some have it. Typing a value sets it on all; <b>×</b> removes the entry from all; the bottom row adds an entry to all. <b>Move &amp; arrange</b>: exact offset; rotate the group around its centre (positions and orientations, around Y, X or Z); spread from or towards the centre; distribute evenly in a line between the two items farthest apart; arrange in a circle; all Y=0; same rotation as the last-selected item; snap positions. <b>Rename series</b> renumbers nicknames with a pattern such as <code>Li01_wplatform_{n:2}</code> (preview first); references in the system and jump connections in other systems follow. A mixed selection can be narrowed to one kind with <b>Keep only</b>. Every action is a single undo step.</p>
+<p>Fields with <b>…</b> open a search picker (loadouts, factions, bases, stars, music, pilots, voices…). Fields with <b>✎ + ⌕</b> edit, create or pick an in-game text.</p>
+
+<h2 id="safety">Saving, undo &amp; backups</h2>
+<ul>
+  <li>Edits stay in memory until you press <kbd>Ctrl</kbd>+<kbd>S</kbd> (also inside dialogs). That saves every changed file at once.</li>
+  <li>The first time a file is overwritten in a session, the original is copied to <code>&lt;game&gt;\editor_backups\&lt;session time&gt;\</code>. <span class="menu">File → Backups…</span> lists them.</li>
+  <li><kbd>Ctrl</kbd>+<kbd>Z</kbd> / <kbd>Ctrl</kbd>+<kbd>Y</kbd> undo and redo across all files, including multi-file operations such as a jump connection. They also work while a dialog is open (markets, bars, ships, missions, strings…). The model, UTF and effect editors have their own undo for the file they have open. Undoing back to the saved state clears the "unsaved" mark.</li>
+  <li><span class="menu">File → Review changes…</span> shows everything you changed before a playtest — see <a href="#review">Review changes</a>.</li>
+  <li>Lines you did not touch are written back byte-for-byte, comments included. Binary (BINI) files are saved as text INI, which Freelancer also reads.</li>
+  <li>Model, effect and DLL files are rewritten in their own format and checked before writing.</li>
+</ul>
+
+<h2 id="snapshots">Snapshots</h2>
+<p><span class="menu">File → Snapshots (checkpoints)…</span> keeps named copies of your work so you can try something risky and go back.</p>
+<ul>
+  <li><b>📌 Take snapshot</b> copies every file you have changed or added so far (Freelancer's untouched files are not copied, so snapshots are small). They are stored in <code>&lt;game&gt;\editor_snapshots\</code>.</li>
+  <li>Click a snapshot to <b>compare</b> it with your files now: what changed since, what was added or changed after it, what would be put back to the original.</li>
+  <li><b>Restore</b> makes your files match the snapshot: its files are written back, files changed after it go back to the original, files added after it are removed. A "Before restoring …" snapshot is taken automatically first, so a restore can always be undone. The editor reloads afterwards.</li>
+  <li>Snapshots can be renamed (with a note) and deleted; deleting one never touches your current files.</li>
+</ul>
+
+<h2 id="editing">Editing a system</h2>
+<h3>Select and move</h3>
+<p>Click to select, <kbd>Shift</kbd>+click to add. <kbd>G</kbd> moves, <kbd>R</kbd> rotates, <kbd>X</kbd> switches between world and local space. Snapping is under <span class="menu">Tools → Snap settings…</span>. Exact values can be typed in the properties panel.</p>
+<h3>Add, copy, delete</h3>
+<p><kbd>Shift</kbd>+<kbd>A</kbd> or right-click adds an object (pick the archetype with a 3D preview). <kbd>Ctrl</kbd>+<kbd>C</kbd>/<kbd>V</kbd> copy and paste, also into another system. <kbd>Ctrl</kbd>+<kbd>D</kbd> duplicates, <kbd>Del</kbd> deletes.</p>
+<h3>Rename</h3>
+<p>Renaming a nickname also fixes everything that points at it: <code>prev_ring</code>/<code>next_ring</code>, <code>parent</code>, field zones and the <code>goto</code> of jump gates in other systems.</p>
+<h3>System settings</h3>
+<p>Click empty space (or the system row in the outliner) for <code>[SystemInfo]</code>, music, ambient colour, dust, the background starsphere and the system's universe.ini entry.</p>
+
+<h2 id="wizard">New system wizard</h2>
+<p><span class="menu">Create → New system wizard (complete system)…</span> builds a whole, playable system in one go. On the right you see the universe map (click to place the new system) and a top-down preview of what will be created.</p>
+<ul>
+  <li><b>Name and nickname</b> (region prefix + next free number, e.g. Li06); the name goes into an editable resource DLL.</li>
+  <li><b>Template system</b>: music, background, dust, ambient light, space colour, local faction, the sun and the planet types are taken from it.</li>
+  <li><b>Planets</b> (0–5) on orbits around the sun, named “Name I, II…”, each with a death zone; 🎲 rolls a new layout.</li>
+  <li><b>Station with base</b>: a station next to the first planet with a base cloned from a template base — rooms, bar characters, news and markets (station bases of the template system are listed first).</li>
+  <li><b>Jump connections</b> (up to three): gates or holes; both ends are created, each facing the other system, with the game's usual tunnel and effect.</li>
+  <li><b>Trade lanes</b> from the station to each jump gate, and <b>patrol paths</b> station ↔ each jump with the population and encounters of a template patrol path (its <code>[EncounterParameters]</code> are copied too).</li>
+  <li><b>Routes</b>: the three shortest-path files (<code>systems_shortest_path.ini</code>, <code>shortest_legal_path.ini</code>, <code>shortest_illegal_path.ini</code>) get routes to and from the new system (fewest jumps; legal = gates only). Existing routes are not changed.</li>
+</ul>
+<p>Routes are found <b>by travel time</b> by default — flying at cruise speed (300 m/s), trade lanes at lane speed (2,500 m/s), 20 s per jump — or by fewest jumps.</p>
+<p>The wizard opens the new system when it is done. Nothing is written until you press <kbd>Ctrl</kbd>+<kbd>S</kbd>; <kbd>Ctrl</kbd>+<kbd>Z</kbd> undoes it step by step. Take a <a href="#snapshots">snapshot</a> first if you want a one-click way back, then run the <a href="#preflight">pre-flight check</a> before testing in the game.</p>
+
+<h2 id="routes">Routes</h2>
+<p><span class="menu">Tools → Routes (shortest-path files)…</span> checks <code>systems_shortest_path.ini</code>, <code>shortest_legal_path.ini</code> (jump gates only) and <code>shortest_illegal_path.ini</code> against your universe: systems without a section, reachable systems without a route, and routes that use a jump connection that no longer exists. Freelancer uses these routes for nav-map route plotting and NPC traffic.</p>
+<ul>
+  <li><b>Add missing / fix broken</b> keeps every correct route and only adds or repairs; <b>Rebuild all routes</b> recomputes every line.</li>
+  <li>New routes are found by travel time (trade lanes count) or by fewest jumps. The original files were made by Digital Anvil with their own weighting, so a rebuild changes some vanilla routes — both kinds work in the game.</li>
+  <li>Story-only systems (<code>visit = 128</code>, St01–St03) have no routes in the original game and are left out unless you tick them. The original game also has no routes for Li05.</li>
+</ul>
+
+<h2 id="recipes">Step-by-step recipes</h2>
+<h3>Add a dockable base to a planet or station</h3>
+<ol class="steps">
+  <li>Select the planet or station.</li>
+  <li><span class="menu">Create → Base for selected object…</span> Choose a template base (rooms, bar and market are cloned from it) and a nickname.</li>
+  <li>Give the base a name with ✎ / + next to <code>strid_name</code>.</li>
+  <li>Open <b>Market…</b> on the base to set what it sells, and <b>Characters &amp; news…</b> for the bar.</li>
+  <li><kbd>Ctrl</kbd>+<kbd>S</kbd>.</li>
+</ol>
+<h3>Build a trade lane</h3>
+<ol class="steps">
+  <li>Select the two end objects (or nothing, and pick points).</li>
+  <li><span class="menu">Create → Trade lane…</span> Set the ring spacing and the template ring (its loadout and reputation are copied).</li>
+  <li>Name the ends with <code>tradelane_space_name</code> — each ring names the end it leads to.</li>
+</ol>
+<p>"Straighten &amp; align" on an existing lane re-spaces and re-faces its rings.</p>
+<h3>Connect two systems</h3>
+<ol class="steps">
+  <li><span class="menu">Create → Jump gate / hole connection…</span></li>
+  <li>Pick the other system and gate or hole. Both ends are created, facing each other's system on the universe map, with matching <code>goto</code> entries.</li>
+</ol>
+<h3>Create a new system</h3>
+<p><span class="menu">Create → New system…</span> (or right-click the universe map). It adds the universe.ini entry, a name string and a system file from a template. Then connect it with a jump gate.</p>
+
+<h2 id="zones">Zones, fields &amp; nebulae</h2>
+<ul>
+  <li><kbd>Z</kbd> draws a zone by dragging on the map: sphere, ellipsoid, box, cylinder or ring, as plain, exclusion, death or encounter zone.</li>
+  <li>The zone panel edits shape, size, <code>property_flags</code> and <code>visit</code> with named flags.</li>
+  <li><b>Field file editor:</b> a zone with an asteroid field or nebula shows its file below the zone: field, band, billboards, the asteroid cube, dynamic asteroids, exclusion zones, and for nebulae fog, exterior, clouds, lightning and puffs. The 3D view rebuilds as you type. A warning appears when several zones share one file.</li>
+  <li><span class="menu">Create → Asteroid field / nebula for selected zone…</span> links a zone to an existing file or clones one.</li>
+</ul>
+
+<h2 id="population">Encounters &amp; paths</h2>
+<p>The zone panel's <b>Population</b> section sets toughness, density, repop and relief times, and the encounter list: each encounter has an archetype, level, chance (0–1) and weighted factions. A missing <code>[EncounterParameters]</code> entry is added for you. "Copy to…" copies the whole block to other zones.</p>
+<p><b>Patrol and trade paths</b> are drawn as lines with arrows. Selecting a path segment shows its waypoint table: move, insert or delete waypoints, reverse, flatten, rename, set radius. <span class="menu">Create → Patrol / trade path</span> lets you click the waypoints in 3D (<kbd>Shift</kbd>+click snaps to objects, <kbd>Enter</kbd> finishes).</p>
+
+<h2 id="visuals">Suns, rings &amp; lights</h2>
+<ul>
+  <li>Suns are drawn as in the game: glow, centre, spines and lens flare, using the size limits recovered from <code>Freelancer.exe</code>. The star picker shows a live preview.</li>
+  <li>Planets edit their ring (<code>ring = zone, file</code>) and the ring file itself.</li>
+  <li>Lights show a falloff graph for <code>attenuation</code> or an <code>atten_curve</code>, with presets.</li>
+</ul>
+
+<h2 id="names">Names &amp; infocards</h2>
+<p><span class="menu">Tools → Strings &amp; infocards</span> (<kbd>Ctrl</kbd>+<kbd>I</kbd>) searches every string and infocard in the resource DLLs. New texts get a free id. The DLLs are rebuilt on save (Freelancer must be closed).</p>
+<h3>Editing infocards</h3>
+<p>Infocards open in a <b>visual editor</b> that looks like the in-game infocard panel — type and format directly:</p>
+<ul>
+  <li><b>B</b> / <i>I</i> / <u>U</u> (or <kbd>Ctrl</kbd>+<kbd>B</kbd> / <kbd>I</kbd> / <kbd>U</kbd>), alignment left / centre / right per paragraph, the font (the numbered fonts of <code>DATA\FONTS\rich_fonts.ini</code>; font 0 is the normal text), the colour (the game's default text colour, white, red, yellow, green, aqua, grey, purple or any colour), and <i>⌫ format</i> to remove formatting.</li>
+  <li>Select text and press a button; with nothing selected, the style applies to what you type next. <kbd>Enter</kbd> starts a new paragraph; pasted text arrives without formatting.</li>
+  <li><b>Template…</b> replaces the card with one of the usual layouts (station or planet card with CLASS / GRAVITY / DOCKING … lines, commodity, warning line); if the card has text you are asked first. <b>Ctrl+Z</b> / <b>Ctrl+Y</b> undo and redo everything in the editor — typing (word by word), formatting, alignment and templates. Escape or × with unsaved edits asks before discarding them. <b>↔ game width</b> narrows the editor to about the in-game panel so you see where lines wrap.</li>
+  <li><b>Plain text</b> mode edits without formatting (one line = one paragraph); <b>XML</b> mode shows the RDL markup with a preview.</li>
+  <li>Nothing is rewritten until you change something. Edits are written the way the game's own infocards are (<code>&lt;TRA bold="true"/&gt;</code>, <code>&lt;JUST loc="c"/&gt;</code>, <code>color="#FF0000"</code>…); all 5,258 original infocards survive the editor unchanged in content.</li>
+</ul>
+
+<h2 id="trade">Markets &amp; trade planner</h2>
+<p><span class="menu">Tools → Trade planner &amp; markets</span> (<kbd>Ctrl</kbd>+<kbd>M</kbd>):</p>
+<ul>
+  <li><b>Routes</b> — every profitable commodity run, ranked by profit per minute over the real map (lanes, gates, cruise). Click one for the route.</li>
+  <li><b>Commodities</b> — where each good is cheapest and where it sells best.</li>
+  <li><b>Markets</b> — a base's commodities, equipment and ships with in-game names and prices. Change the price multiplier, "sells" / "buys only", level and reputation, add or remove lines.</li>
+</ul>
+
+<h2 id="bars">Base characters &amp; news</h2>
+<p><span class="menu">Tools → Base characters &amp; news</span> (<kbd>Ctrl</kbd>+<kbd>B</kbd>) edits <code>mbases.ini</code> and <code>news.ini</code>: rooms and fixtures, factions present and their missions, bar characters (looks, voice, rumours, bribes, information they sell) and news items with their story ranges and bases.</p>
+
+<h2 id="ships">Ships, equipment &amp; loadouts</h2>
+<p><span class="menu">Tools → Ships, equipment &amp; loadouts…</span></p>
+<ul>
+  <li><b>Ships</b> — every <code>shiparch.ini</code> entry with a 3D view of the model and its hardpoints. Hardpoint types are checked against the model's real hardpoints. The ship's price and package come from goods.ini.</li>
+  <li><b>Equipment</b> — every item from the equipment files with its in-game name, price, and the ships that can mount it.</li>
+  <li><b>Loadouts</b> — what NPC ships and stations carry: equipment per hardpoint and cargo. Duplicate a loadout to make a variant.</li>
+</ul>
+
+<h2 id="testkit">In-game test kit</h2>
+<p><span class="menu">Help → In-game test kit…</span> checks that what the editor writes really works in Freelancer. <b>Apply test kit</b> takes a snapshot, then makes one small, obvious change per editor, all at Planet Manhattan, and saves:</p>
+<ul>
+  <li>a nav buoy “FL Editor Test Buoy” with its own info text near the Manhattan docking ring (system editor, resource DLLs);</li>
+  <li>a pink “FL TEST” checker texture on nav buoys (materials &amp; textures);</li>
+  <li>one Manhattan commodity at three times its price (markets); a news story “FL EDITOR TEST: NEWS WORKS” (news, strings);</li>
+  <li>a different face for the Manhattan bartender (bar characters); the Rheinland bar music in the Manhattan bar (room INI); a wider bar camera saved as a text cutscene file (cutscene writer).</li>
+</ul>
+<p>Close Freelancer before applying, then start it, begin a new game (it starts in the Manhattan bar) or load a save docked at Manhattan, and mark each item ✓ or ✗ with a note. The results are saved to <code>editor_testkit_report.txt</code> in your Freelancer folder. <b>Revert test kit</b> restores the snapshot, so every file is exactly as before.</p>
+
+<h2 id="models">Models &amp; hardpoints</h2>
+<ul>
+  <li><span class="menu">Assets → Model &amp; hardpoint editor…</span> (or "Hardpoints…" on an object): add (<kbd>Shift</kbd>+click on the model surface), move, rotate, rename and delete hardpoints; fixed or revolute with axis and limits.</li>
+  <li><span class="menu">Assets → UTF file browser…</span> shows the node tree of any <code>.cmp .3db .mat .txm .sph .ale</code> file. Edit values, preview and replace textures (.dds/.tga), add or remove nodes.</li>
+</ul>
+<div class="note">Test an edited model in the game before making many more changes to it.</div>
+
+<h2 id="materials">Materials &amp; textures</h2>
+<p><span class="menu">Assets → Materials &amp; textures…</span> (or <b>Materials…</b> on an object) edits the material and texture libraries of a model: its own <code>.cmp/.3db</code> and its <code>material_library</code> files (<code>.mat</code>, <code>.txm</code>). Pick the file at the top left.</p>
+<ul>
+  <li><b>Materials:</b> type (DcDt, DcDtOcOt, DcDtEt, EcEt…), diffuse/emissive/ambient colour, opacity and the texture of each slot (diffuse, emissive, detail). The preview shows the model with your unsaved changes, or the selected material on a sphere. New and Duplicate add materials; models refer to materials by name, so existing ones cannot be renamed.</li>
+  <li><b>Textures:</b> thumbnail, size and format, which materials use it, <i>Export PNG</i>, <i>Replace from image…</i> and <i>Add from image…</i> (PNG, JPG, WebP, BMP or DDS). Images are resized to a power of two (up to 2048) and stored as DXT1, or DXT5 when they have transparency, with mipmaps. Transparency only shows with an <code>…OcOt</code> material type.</li>
+  <li>Undo/redo with the buttons or <kbd>Ctrl</kbd>+<kbd>Z</kbd>/<kbd>Y</kbd>; <b>Save</b> writes the changed files (originals backed up) and refreshes the main view.</li>
+</ul>
+
+<h2 id="import">Import &amp; export models</h2>
+<p><span class="menu">Assets → Import model (glTF / GLB / OBJ)…</span> turns a model from Blender or another 3D tool into a Freelancer <code>.3db</code> (one part) or <code>.cmp</code> (several parts) with its collision file <code>.sur</code>.</p>
+<ol class="steps">
+  <li>Choose the model file together with everything it uses: the <code>.bin</code> of a <code>.gltf</code>, the <code>.mtl</code> of an <code>.obj</code>, and the texture images.</li>
+  <li>Set the name, the folder under <code>DATA</code>, the scale (1 unit = 1 metre), whether the source is Z-up, and whether to keep the top-level nodes as separate parts.</li>
+  <li>The preview on the right is the result loaded back through the editor's own Freelancer loader, with the collision hulls in green and hardpoints in yellow. Check it, then <b>Write files</b> (or <b>Write + add solar archetype…</b> to place it in a system right away).</li>
+</ol>
+<ul>
+  <li>Naming rules (common Freelancer modding conventions, so existing files work): <code>name$lod1</code>, <code>$lod2</code>… are extra levels of detail; <code>name$hull</code> is a collision hull; an empty named <code>Hp…</code> is a hardpoint (custom property <code>hptype = rev</code> makes it revolute); a node with the property <code>construct = rev</code> or <code>pris</code> (plus <code>axis</code>, <code>min</code>, <code>max</code>) becomes a moving part.</li>
+  <li>Without <code>$hull</code> nodes, a convex hull is made for each part. Textures are converted to DXT1/DXT5 DDS with mipmaps.</li>
+  <li><span class="menu">Assets → Export model to glTF (.glb)…</span> writes any game model as a <code>.glb</code> with textures, parts, hardpoints (as empties) and collision hulls, which you can edit in Blender and import again. Only the highest level of detail is exported.</li>
+</ul>
+
+<h2 id="anim">Animations</h2>
+<p>The model &amp; hardpoint editor has an <b>Animation &amp; moving parts</b> section for models that have them: docking rings, jump gates, station towers, base rooms, ship bay doors.</p>
+<ul>
+  <li>Pick an animation script (<code>Sc_open dock a</code>, <code>Sc_rotate ring</code>…), play it, loop it, change the speed or scrub with the slider.</li>
+  <li>Each moving part (revolute or prismatic joint) has a slider to pose it by hand within its limits. Posing does not change the file.</li>
+</ul>
+
+<h2 id="thn">Cutscenes</h2>
+<p><span class="menu">Assets → Cutscenes (.thn player &amp; script editor)…</span> plays the game's <code>.thn</code> scripts — all 1,524 of the vanilla game — including base landing and launch scenes, bar scenes, the intro and the mission cutscenes.</p>
+<ul>
+  <li>The view goes through the cutscene's own cameras; switch to <b>Free camera</b> to look around, with cameras, markers and motion paths shown as helpers.</li>
+  <li>Base scripts are played together with their room: the room INI's set script and ambient scenes are loaded too (<b>room</b> checkbox), and the room's looping animation runs.</li>
+  <li>Played: cameras and camera changes, spatial and path animations, attachments (also to hardpoints), model animations (<code>START_MOTION</code>), light changes, particle effects and sounds and voice lines. Characters are shown as simple stand-in figures.</li>
+  <li>The <b>Events</b> tab lists every event — click one to jump there; <b>Entities</b> lists everything in the scene and shows models that could not be found.</li>
+  <li>The <b>Script</b> tab shows the script as text. Edit it and press <b>Apply</b> to see the result, then <b>Save .thn</b>. Freelancer reads text <code>.thn</code> files just like the compiled ones.</li>
+</ul>
+<h3>Editing a cutscene</h3>
+<ul>
+  <li><b>Move things:</b> in the free camera, click an object, character or marker (or pick it in <b>Entities</b>) and drag the gizmo — <kbd>W</kbd> move, <kbd>E</kbd> rotate. At 0 s this changes where it starts; at a later time it adds a key that moves it there in <i>key length</i> seconds.</li>
+  <li><b>📷 Camera from view:</b> fly the free camera to the shot you want, then press it — the selected camera (or the active one) takes that position, direction and field of view.</li>
+  <li><b>✂ Cut to camera here</b> switches to the selected camera at the current time.</li>
+  <li><b>Timeline:</b> drag an event's bar to move it in time and its right end to change its duration (snaps to 0.05 s). Click a bar to select it; the <b>Events</b> tab then shows its time, duration, targets and values for editing, with <i>Duplicate</i> and <i>Delete</i>.</li>
+  <li><b>↶ Undo</b> steps back through your edits; <b>Save .thn</b> writes the script (as text; the original is backed up). Room scripts loaded alongside are shown faded and are not changed.</li>
+</ul>
+
+<h2 id="chars">Characters</h2>
+<p>Characters are drawn with the game's own body, head and hand models (<code>.dfm</code>) from <code>costumes.ini</code> and <code>bodyparts.ini</code>, posed by their skeletons and animated with the body, face and hand animations (<code>.anm</code>, about 2,800 of them).</p>
+<ul>
+  <li><span class="menu">Assets → Characters &amp; animations…</span>: every costume in 3D; choose any animation of the right gender, loop it, filter by name.</li>
+  <li>In the bar editor, opening a character's <b>Appearance</b> shows that body, head, hands and accessory together.</li>
+  <li>Cutscenes and base interiors use the real characters; a stand-in figure appears only when a costume cannot be found.</li>
+  <li>As in the game, a character's height comes from its animation: the body stands at the floor height plus the animation's <i>root height</i> (≈ 0.96 m standing, ≈ 0.54 m sitting), so feet and seats line up. <code>floor_height</code> and <code>START_FLR_HEIGHT_ANIM</code> in cutscenes change the floor; moving a character up or down with the gizmo has no effect in the game either.</li>
+  <li>Animations blend: a new one fades in over 0.3 s on top of the running ones (immediately from the rest pose), timed ones fade out, and walking or turning animations move the character with their root motion.</li>
+  <li>Bar characters without their own fidget script get one from <code>SCRIPTS\GCS\genericscripts.ini</code> for their gender and their spot's posture (stand, sit), like the game does.</li>
+</ul>
+
+<h2 id="interiors">Base interiors</h2>
+<p><span class="menu">Tools → Base interiors…</span> (or <b>Interiors…</b> on a base object) shows each room of a base in 3D, as the game builds it: the room's set script and ambient scenes, its looping animation, the fixtures (bartender, dealers) at their markers playing their fidget scripts, and the base's bar characters of that room on free seats and standing spots, up to the room's character density.</p>
+<ul>
+  <li>View through the room camera or any camera of the scripts, or fly around. Markers are shown as dots: orange for fixture spots (<code>Zs/…</code>), green for generic NPC spots (<code>Zg/NPC/…</code>), blue for the player. Click one to see its name.</li>
+  <li><b>Characters</b> (mbases.ini <code>[MRoom]</code>): character density and the fixture lines — character, location marker, fidget script, type. Select a fixture's field, click a marker in the view and press <i>Use</i> to move it there.</li>
+  <li>Below: every section of the room INI — scripts, music and ambience (▶ plays them), camera, player placement, hotspots and ship placements — with add and remove.</li>
+</ul>
+
+
+<h2 id="audio">Sounds &amp; voices</h2>
+<p><span class="menu">Assets → Sounds &amp; voices…</span> plays everything under <code>DATA\AUDIO</code>.</p>
+<ul>
+  <li><b>Sounds</b>: every <code>[Sound]</code> entry of the sound INIs with its file, attenuation and range.</li>
+  <li><b>Voices</b>: each voice profile with its lines. The game stores each line in the voice's <code>.utf</code> bank under the CreateID hash of its name; recordings that no INI line names are listed by hash.</li>
+  <li><b>Find a voice line</b>: type a line name to see which voice banks contain it.</li>
+  <li>Save any sound as <code>.wav</code> or as the <code>.mp3</code> that is inside it.</li>
+</ul>
+
+<h2 id="fx">Particle effects</h2>
+<p><span class="menu">Assets → Particle effects…</span> asks for a <code>[VisEffect]</code> (engine glows, explosions, weapon effects…) and shows it live.</p>
+<ul>
+  <li>The left list is the effect's node tree: <span style="color:#7fb7ff">emitters</span> create particles, <span style="color:#ffb86b">appearances</span> draw them; the arrows below show which feeds which.</li>
+  <li>Select a node to edit its values. Curves (size, alpha, colour over the particle's life; emitter values over time) show as a graph: drag the yellow points, or type in the table. <b>+ keyframe</b> adds a point; the drop-down sets the easing.</li>
+  <li><b>sparam</b> is the per-instance value the game passes in (e.g. engine throttle). Curves with several sparam items blend between them; the slider previews that. Many engine effects only emit at higher sparam, so move the slider if the preview stays empty. <b>Fit</b> frames the effect again.</li>
+  <li>The preview also shows <b>beams</b> (engine trails and similar ribbons), <b>fields</b> that push particles around (gravity, air, radial, turbulence, collide — their behaviour was read from the game's <code>alchemy.dll</code>), <b>particle appearances</b> that spawn other effects per particle and when particles die, and <b>mesh appearances</b> when the mesh name is an asteroid or solar archetype. Field behaviour (gravity, air, turbulence, radial, collide, dust) and the beam ribbons follow the game's alchemy.dll exactly.</li>
+  <li><kbd>Ctrl</kbd>+<kbd>Z</kbd>/<kbd>Y</kbd> undo inside the dialog. <b>Save .ale</b> writes the file (original backed up). Value-only changes keep the rest of the file byte-identical.</li>
+</ul>
+
+<h2 id="missions">Mission scripts</h2>
+<p><span class="menu">Tools → Mission scripts…</span> opens the story missions (<code>MISSIONS\Mxx\mxx.ini</code>).</p>
+<ul>
+  <li><b>Triggers</b> are drawn as a graph. A trigger waits for its one condition (<code>Cnd_…</code>) and then runs its actions (<code>Act_…</code>). Green lines: activates; red: deactivates; dashed blue: watches. A green bar marks triggers active when the mission starts.</li>
+  <li>Drag nodes to arrange them (kept per file), drag the background to pan, wheel to zoom, double-click to centre, <b>Fit</b> to see everything.</li>
+  <li>The right panel edits the selected trigger: condition, actions, "active at start", "repeatable". Names of other triggers and entities show as chips — click to jump there. "Referenced by" lists what switches this trigger on.</li>
+  <li><b>Entities</b> lists ships, NPCs, objective lists, dialogs, objectives, formations, solars and loot, with which triggers use each.</li>
+  <li>Each condition and action shows its parameters as labelled fields (for example <code>Act_SpawnShip</code>: ship, objective list, position, orientation), with the type, default and what the game does with each value on hover. The descriptions were written from the game's own mission code.</li>
+  <li>The checks below the graph flag unknown references, triggers that are never activated, triggers without exactly one condition, and wrong parameter counts or words the game does not understand (which it silently replaces by a default). A few warnings exist in the original game data too.</li>
+</ul>
+<div class="note">Mission changes only show up in a new game or from a save made before the changed part. Keep a backup save.</div>
+
+<h2 id="msnwizard">New mission wizard</h2>
+<p><span class="menu">Tools → New mission wizard…</span> writes a complete mission script from a template:</p>
+<ul>
+  <li><b>Destroy</b> — fly to a marked spot near an object; a hostile group appears; destroy it. <b>Escort</b> — a friendly transport flies from the start base to a destination base and docks; optional ambush half way; the job fails if it is destroyed. <b>Patrol</b> — three waypoints, optional ambush at the second. <b>Courier</b> — fly to a base and dock.</li>
+  <li>Hostiles use the faction's random-mission ships for the chosen level (<code>faction_prop.ini</code>, <code>npcships.ini</code>), with its pilot voices and comm costumes; missing ship definitions are copied into the mission's <code>npc_ship_file</code>.</li>
+  <li>Objective texts, the title and the log entries become new strings; the reward is paid with <code>Act_AdjAcct</code>.</li>
+</ul>
+<p><b>Where the mission runs.</b> Freelancer only starts the 14 story missions listed in <code>Content.dll</code> (Mission_01a … Mission_13). So the wizard installs a mission either as a <b>side job</b> — its triggers are added to a story mission and start when the player has docked at the start base and launches again; it runs while that story mission is the active one and never changes the story mission's state — or by <b>replacing a story slot</b>, which makes the slot's file this mission alone (a new game lands at the start base with the ship, loadout and money you choose) for mods with their own campaign. Take a <a href="#snapshots">snapshot</a> before replacing a slot.</p>
+<p>After creating, the <a href="#missionmap">mission map</a> opens on the new mission so you can move the spawn points and waypoints; <span class="menu">Tools → Mission scripts…</span> shows its triggers. Test in the game with a save from when the host mission is active.</p>
+
+<h2 id="missionmap">Mission map (3D)</h2>
+<p><span class="menu">Tools → Mission map (3D)…</span> (or <b>🗺 3D map</b> in the mission script editor) shows where a mission happens, in the normal system view. A panel on the left lists, for the system you are in:</p>
+<ul>
+  <li>mission <b>ships</b>, <b>formations</b> and <b>solars</b> (their <code>position</code>), nav-map <b>objectives</b> (<code>navmarker</code>, <code>rep_inst</code>), <b>trigger areas</b> (<code>Cnd_DistVec</code>, random-pop spheres — drawn with their radius), <b>player</b> placements (<code>Act_SetInitialPlayerPos</code>, <code>Act_MovePlayer</code>), <b>spawn/move</b> positions (<code>Act_SpawnShip</code>, <code>Act_SpawnFormation</code>, <code>Act_RelocateShip</code> with coordinates) and <b>waypoints</b> (<code>GotoVec</code>). Arrows show orientations.</li>
+  <li>"Systems:" lists every system the mission uses — click one to go there. The coloured buttons hide or show a kind of marker.</li>
+  <li>Click a marker in the view or a line in the list to select it. Drag the gizmo to move it (<kbd>W</kbd>) or rotate it (<kbd>E</kbd>, where it has an orientation), type exact values, change a radius, or <i>Place by click</i> on the y = 0 plane. <kbd>F</kbd> flies to it.</li>
+  <li>Only the numbers on that INI line change; everything goes through the normal undo and <kbd>Ctrl</kbd>+<kbd>S</kbd>. Ships placed relative to another object (<code>rel_pos</code>) are listed with ◇ and can be given a fixed position.</li>
+  <li>A <span style="color:#ffb366">?</span> means the INI does not say which system the thing is in; the mission's main system is assumed.</li>
+  <li><b>3D models</b> (tick box at the top): mission ships, formations (each ship at its slot from <code>formations.ini</code>) and solars are drawn with their real models, turned the way they face — resolved through <code>[MsnShip] NPC</code> → <code>[NPC] npc_ship_arch</code> → <code>[NPCShipArch]</code> (the mission's own <code>npc_ship_file</code>, then <code>npcships.ini</code>) → <code>shiparch.ini</code>. The marker shrinks to a dot next to a model; <kbd>F</kbd> flies close enough to see it.</li>
+</ul>
+
+<h2 id="npcships">NPC ships</h2>
+<p><span class="menu">Tools → NPC ships…</span> edits the <code>[NPCShipArch]</code> entries in <code>MISSIONS\npcships.ini</code> and in each mission's own <code>npcships.ini</code>. Each entry combines a ship (with a 3D view), loadout, difficulty level (d1–d19), pilot, AI state graph and <code>npc_class</code> tags (shown as removable chips). Unknown ships or loadouts are flagged. "Used by" lists the mission <code>[NPC]</code> sections that name the entry, and renaming updates them. In the mission script editor, an NPC entity has an <b>NPC ship…</b> button that opens its entry.</p>
+
+<h2 id="review">Review changes</h2>
+<p><span class="menu">File → Review changes…</span> lists every file the editor has changed, compared with the file as it was before the editor first touched it (the oldest copy in <code>editor_backups</code>), plus unsaved edits.</p>
+<ul>
+  <li>INI files show a line diff with the section and nickname of each change.</li>
+  <li>Resource DLLs show which strings and infocards changed; model and effect files show which nodes changed.</li>
+  <li><b>Restore original</b> puts a saved file back as it was (the current version is backed up first, so this can be undone the same way). An open system reloads automatically.</li>
+  <li><b>Copy summary</b> copies a short list of changed files, e.g. for release notes.</li>
+</ul>
+
+<h2 id="saves">Save games</h2>
+<p><span class="menu">Tools → Save game viewer…</span> opens a <code>.fl</code> file from <code>Documents\My Games\Freelancer\Accts\SinglePlayer</code>. Encrypted saves are decoded automatically. It shows the pilot, location, ship, equipment, cargo, reputation and statistics with in-game names. You can change money, rank and reputation, then <b>Download edited save</b> and copy it over the original (keep a copy first). "Download decrypted .ini" gives a readable text version.</p>
+
+<h2 id="balance">Balance tables</h2>
+<p><span class="menu">Tools → Balance tables…</span> lists guns and launchers, shields, thrusters and ships side by side.</p>
+<ul>
+  <li>Derived numbers are computed exactly as the dealer infocard in the game computes them: hull and shield damage (munition plus explosion, shield damage including <code>HULL_DAMAGE_FACTOR</code> from <code>constants.ini</code>), range and speed (guided missiles included), refire, and thruster speed. Damage per second and damage per energy are added for comparison.</li>
+  <li>Blue columns are INI values: click a cell to edit it. The <b>×</b> button on a blue column header multiplies that value for every row currently shown, e.g. filter "liberty gun" and scale <code>mun hull_damage</code> by 1.1. Munition values are shared by every gun firing that munition, so each munition is changed only once.</li>
+  <li>Click a column header to sort, type in the filter to narrow the list, tick "with price only" to hide items that are not sold anywhere, and <b>Copy as CSV</b> for a spreadsheet. Everything goes through undo and Ctrl+S.</li>
+</ul>
+
+<h2 id="mods">Mods: export, install, conflicts</h2>
+<p><span class="menu">File → Mods: export, install, conflicts…</span></p>
+<ul>
+  <li><b>Export my changes as a mod</b>: every file the editor changed or created (compared with the oldest backup) goes into a <code>.zip</code>, with a manifest and the original version of each changed INI. The zip is downloaded and also saved to <code>editor_exports</code>. Anyone can install it by copying its <code>DATA</code> and <code>EXE</code> folders; with this editor they also get conflict checks and uninstall.</li>
+  <li><b>Install a mod</b>: shows, per file, whether it is new, a clean replacement, or a conflict because your file differs from the one the mod was made from. Changed INI files are merged three-way when the mod contains their originals: your changes and the mod's are combined, and only lines changed by both are reported. Any plain mod zip with <code>DATA\</code> / <code>EXE\</code> folders can be installed too.</li>
+  <li><b>Installed mods &amp; conflicts</b>: every mod installed with the editor, which of its files were changed since, which files several mods change, and <b>Uninstall</b>, which puts back the files the install replaced and removes the ones it added.</li>
+</ul>
+<h3>Player installer</h3>
+<p><b>Build player installer (.zip)</b> on the Export tab makes a package for players who do not have the editor. They unpack it and double-click a file — Windows' own PowerShell does the rest:</p>
+<ul>
+  <li><b>install.cmd</b> finds the Freelancer folder (where the package was unpacked, the registry, the usual folders, or a folder dialog; a folder can also be dragged onto it), refuses while Freelancer or FLServer is running, shows what it will do, and warns when a file is not the one the mod was made for (another mod, a patch or a different Freelancer version) before replacing it. Every replaced file is backed up to <code>&lt;Freelancer&gt;\mod_backups\&lt;mod&gt;\</code>, every copy is checked, and a failure puts everything back.</li>
+  <li><b>uninstall.cmd</b> restores every original and removes the files the mod added; files changed after the install are only overwritten if the player agrees. <b>check.cmd</b> only reports.</li>
+  <li>The package contains <code>mod.json</code> (name, version, author, description, a SHA-256 checksum of each file and of the original it replaces), the files under <code>files\</code>, the readable <code>installer.ps1</code> and a README.</li>
+</ul>
+<p>Tested with PowerShell 7 on every path (install, refusal of a second install, reinstall, uninstall, declined and accepted conflicts, failure halfway): the game folder ends up byte-for-byte as before. Players need Windows 10 or 11 (Windows PowerShell 5.1 is built in).</p>
+
+<h2 id="server">Server tools (multiplayer)</h2>
+<p><span class="menu">Tools → Server tools (multiplayer)…</span></p>
+<ul>
+  <li><b>Server</b>: name, description and death penalty from <code>freelancer.ini [Server]</code>; what the server loads (<code>dacomsrv.ini [Libraries]</code> with FLHook / FLSharp, the FLHook plugins in <code>EXE\plugins</code>, <code>[Initial MP DLLs]</code>); <b>▶ Start FLServer</b> (saves first if you want).</li>
+  <li><b>New players</b>: the start options of the new-character screen (<code>DATA\CHARACTERS\newcharacter.ini</code>: reputation group, start base, ship package, pilot; packages with ship, loadout and money), each checked against the game data (⚠ = does not exist), and the starting reputations of new characters (<code>EXE\mpnewcharacter.fl</code> “house” lines) as sliders.</li>
+  <li><b>Multiplayer saves</b>: the characters in <code>My Games\Freelancer\Accts\MultiPlayer</code> on this computer, opened in the save editor. Stop FLServer before changing one.</li>
+  <li><b>Server / client files</b>: everything you changed, sorted by where it has to go — gameplay data must be identical on the server and every client; models, textures, sounds, interface, cutscenes and the name/infocard DLLs are only needed by clients; FLHook, its plugins and the new-character files only by the server — with a zip for each and a complete server and client package.</li>
+</ul>
+
+<h2 id="preflight">Pre-flight check</h2>
+<p><span class="menu">Tools → Pre-flight check (everything)…</span> (also in the Playtest window) runs every check the editor has before you start the game:</p>
+<ul>
+  <li>all systems (the same checks as <i>Validate all systems</i>);</li>
+  <li>every file named in any INI (models, textures, material libraries, sounds, scripts) exists;</li>
+  <li>INI keys the game never reads, with the likely typo;</li>
+  <li>string and infocard ids that have no text, or point to a DLL that is not in <code>[Resources]</code>;</li>
+  <li>goods, markets, loadouts and NPC ships that refer to things that do not exist.</li>
+</ul>
+<p>Click an entry to see the INI lines around it, or to open the object in its system. The <b>IDs &amp; strings</b> tab lists per resource DLL how many strings and infocards no INI uses, the next free id, and identical strings stored under several ids.</p>
+
+<h2 id="patches">Patch manager</h2>
+<p><span class="menu">Assets → Patch manager (exe / dll hex edits)…</span> applies community hex edits to <code>Freelancer.exe</code>, <code>common.dll</code>, <code>server.dll</code> and the other game files.</p>
+<ul>
+  <li>Every patch is checked byte for byte against your file: <b>Apply</b> appears only when the original bytes are there, <b>Revert</b> only when the patched bytes are. Anything else shows “does not match your file” and cannot be switched.</li>
+  <li>Value patches (cruise speed on the HUD, navmap limits, screen shake…) show the value in your file now; set a new one, or go back to the value of the reference install.</li>
+  <li>Each location shows the section, address and the function of the decompiled game it is in, with the C++ name where one exists, so you can see what code a patch changes.</li>
+  <li><b>Custom patch</b> applies any other patch from a list: module, offset, original bytes, new bytes; it is applied only when the original bytes match.</li>
+  <li>Changes stay in memory until <b>Write</b>. Freelancer must be closed; the original files are copied to <code>editor_backups</code> on the first write.</li>
+</ul>
+
+<h2 id="rendering">How models are drawn</h2>
+<p>Materials are drawn with the render states of the game's own material types, taken from the decompiled <code>Shading.dll</code> and <code>flmaterials.dll</code>: lit or unlit, opaque, alpha-blended, additive or multiplied, two-sided or not. <code>OcOt</code> materials use alpha testing with 1-bit alpha (DXT1) textures and blending otherwise; detail maps are multiplied in at their tile rate; <code>NullMaterial</code> is not drawn. The <code>[MaterialMap]</code> of <code>EXE\dacom.ini</code> is applied the way the game applies it, for example <code>detailmap_…</code> materials become detail-map materials and <code>…_glass</code> becomes glass. An emissive colour (<code>Ec</code>) is part of the lighting that the texture is multiplied with, as in the game's fixed-function pipeline — so lit screens and signs show their texture instead of glowing white.</p>
+
+<h2 id="factions">Faction relations</h2>
+<p><span class="menu">Tools → Faction relations…</span> shows every <code>rep</code> line of <code>initialworld.ini</code> as a grid: the row is the faction that holds the opinion, the column the one it is about; red is hostile (≤ −0.6), grey neutral, green friendly (≥ 0.6). Pairs whose two directions differ by more than the threshold are outlined yellow; grey-blue cells have no line. Click a cell to change it with the slider or the quick values; <i>edit both ways</i> keeps the pair symmetric.</p>
+
+<h2 id="translate">Translation</h2>
+<p><span class="menu">Tools → Translation: export / import texts…</span> writes all strings and infocards of the chosen resource DLLs to a CSV file (UTF-8, opens in Excel or LibreOffice) with the columns id, dll, kind, source and translation. Fill in the translation column and import the file: the texts go into the same DLLs in one undoable step (save with Ctrl+S), so work on a copy of your install. Infocards stay RDL XML — translate the words between the tags.</p>
+
+<h2 id="refs">References &amp; rename everywhere</h2>
+<p><span class="menu">Edit → Find references / rename everywhere…</span> (<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>F</kbd>, or <b>References…</b> on a selected object) searches every INI file of the mod — text and binary — for a nickname: where it is defined and every line that names it (loadouts, markets, encounters, missions, NPC ships, system files, universe.ini…). Click a hit to see its section; system hits can be opened directly.</p>
+<p><b>Rename everywhere…</b> changes the definition and every reference in one undoable step; Ctrl+S saves all touched files (originals backed up). Unsaved edits are included. Save games, file and folder names and DLL texts are not changed.</p>
+
+<h2 id="playtest">Playtest here</h2>
+<p><span class="menu">Tools → Playtest here…</span> (<kbd>F5</kbd>) writes a single-player save that starts in the system you are editing — in space next to the selected object (or at the camera), facing it — and can start Freelancer.</p>
+<ul>
+  <li>Choose the ship (with its dealer package, any loadout, or the new-game starter equipment), money and rank, the respawn base, and whether the save is free roam (story finished, all gates unlocked) or the new-game story.</li>
+  <li>The save is built from the game's own new-game template (<code>EXE\newplayer.fl</code>) and written to <code>Documents\My Games\Freelancer\Accts\SinglePlayer</code> (an existing file of the same name is backed up). In the game: Load Game → “Playtest …”.</li>
+  <li><b>Write save &amp; start Freelancer</b> launches the game; when it closes with an error, the crash &amp; log analyser opens with the game log.</li>
+  <li>Save your edits (Ctrl+S) first — the game only sees saved files.</li>
+</ul>
+
+<h2 id="spawnsim">Spawn simulator</h2>
+<p><b>Simulate spawns…</b> in a zone's Population section (or <span class="menu">Tools → Spawn simulator</span>) runs thousands of spawns with the game's own encounter rules: encounter weights, the difficulty class added by the level, which factions can fly each formation, permutations, the NPC ship choice and group sizes.</p>
+<ul>
+  <li>Results: how often each encounter, faction and ship appears (with level and loadout), the most common groups, average group size and the spawn chance per check (density / repop_time).</li>
+  <li><b>Problems</b> lists formations that can never spawn because none of the zone's factions has a fitting NPC ship — a common modding mistake that otherwise shows as an empty zone.</li>
+  <li>Not simulated: the player's reputation (hostile factions need the mission's hostile clamp in single player), density_restriction, relief_time and battle limits.</li>
+</ul>
+
+<h2 id="keys-ref">INI key reference</h2>
+<p>The editor carries a reference of every section and key the game reads, with type, default, allowed values and meaning, written from the reconstructed game source.</p>
+<ul>
+  <li>Hover a key name in the properties panel to see its description. Keys the game never reads are tagged <b>unused</b> (leftovers or typos — the game silently ignores them), and validation reports them as notes with a "did you mean …" suggestion.</li>
+  <li>The "+ add entry…" list also offers the other keys the game reads for that section.</li>
+  <li>In VS Code, hovering a key in any <code>.ini</code> shows the same description, and typing a key name offers the keys valid in that section.</li>
+</ul>
+
+<h2 id="crash">Crash &amp; log analyser</h2>
+<p><span class="menu">Tools → Crash &amp; log analyser…</span> explains what went wrong after a crash or a bad start.</p>
+<ul>
+  <li>Paste a crash dialog, Windows Event Viewer / error report text or a crash log, or press <b>Load FLSpew.txt</b> (the game's own log, written on every run) or <b>Open file…</b>.</li>
+  <li>Crash addresses (e.g. <code>common.dll+0x1a2b3</code>, or "Faulting module name … Fault offset …") are turned into the function that crashed: about 28,000 functions from the decompilation, over 5,600 of them with their C++ name and source file. A hint says which kind of data that code handles (loadouts, systems, effects, missions, models…). If the crashing module is not a Freelancer file, a mod or plugin DLL is the cause.</li>
+  <li>Log lines are grouped and counted, linked to the code that printed them, and nicknames in them get a <b>find</b> button that searches all DATA INI files for that name.</li>
+</ul>
+
+<h2 id="checks">Validation &amp; tools</h2>
+<ul>
+  <li><span class="menu">Tools → Validate system / Validate all systems</span>: missing encounter parameters and factions, broken gotos, broken lane chains, duplicate nicknames, unknown archetypes, missing files and more. Click a finding to go there.</li>
+  <li><span class="menu">Tools → Hash tool</span>: CreateID, faction hash, model CRC and ALE CRC for any name.</li>
+  <li><span class="menu">Tools → Rebuild [Archetype] preload list</span>, <span class="menu">Measure distance</span>.</li>
+</ul>
+
+<h2 id="vscode">VS Code extension</h2>
+<p>Install <code>freelancer-system-editor-1.17.0.vsix</code> (Extensions → ⋯ → Install from VSIX). Then "Freelancer: Open System Editor" opens the editor in a tab; right-click a system <code>.ini</code> → "Open in Freelancer System Editor"; <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>E</kbd> jumps from the selection to its INI line; INIs edited in VS Code reload in the editor automatically.</p>
+
+<h2 id="bigmods">Large mods (Discovery)</h2>
+<p>The editor works with vanilla Freelancer and with big mods such as Discovery Freelancer. Both have been tested with every tool. What differs on a mod:</p>
+<ul>
+<li><b>Map labels.</b> Discovery lists "sector" entries in <code>universe.ini</code> that have no system file; they only label the nav map. The Systems list shows them greyed out, they cannot be opened, and validation, pre-flight and the route tools skip them.</li>
+<li><b>Markets.</b> Discovery writes <code>MarketGood = item, 0, 0, …</code> for goods a base sells and <code>…, 1, 1</code> for goods it only buys. The trade planner reads the 6th value (as Freelancer does), so routes work on both.</li>
+<li><b>NPC levels.</b> The mission wizard picks hostiles by level from both vanilla names (<code>…_d3</code>, <code>…_d1-4</code>) and Discovery names (<code>…_d1_d4_…</code>).</li>
+<li><b>Infocards.</b> Discovery's infocards use a different (numeric) RDL style. The visual editor keeps whichever style the card already has, so an edit changes only what you edited. New cards (and templates, plain-text edits and the test-kit card) are written in the style most of the mod's own cards use — for Discovery the numeric <code>TRA data/mask</code> form with its <code>&lt;?xml?&gt;</code> header; on vanilla nothing changes. The infocard editor's <b>Notation</b> list (Auto / Vanilla / Discovery) lets you choose explicitly; click the ⓘ next to it for a detailed comparison with examples.</li>
+<li><b>Size.</b> With ~130 systems, 2,500 trade nodes and over 2 million profitable runs, the trade planner takes a few seconds; the table shows the best 300 for the column you sort by. Pre-flight and the faction grid take 10&ndash;15 s.</li>
+<li><b>Textures.</b> Every texture kind Freelancer loads is decoded: DXT1/3/5, uncompressed DDS in 16/24/32-bit layouts, TGA of every type (colour-mapped, true-colour, greyscale, RLE), the early “Palette 8 bit” format, and DDS or TGA data stored under the “wrong” node name (Discovery has both). A texture whose data is empty shows its model untextured, and a problem in one object never stops the 3D view from drawing.</li>
+<li><b>Pre-flight on Discovery</b> reports some files the mod itself references but does not ship (old intro-system leftovers), and files that exist but are empty (0 bytes — Discovery ships a few placeholder models and effects). These are harmless to the game; check new ones only.</li>
+<li><b>Memory.</b> Models, textures and parsed files of systems you opened a while ago are released automatically (everything used by the open system and the one before stays), so a long session browsing many of Discovery's 133 systems keeps a steady memory use.</li>
+</ul>
+
+<h2 id="updatepatch">Update patch (mod updates)</h2>
+<p><span class="menu">File → Mods → Update patch</span> (off by default). When switched on, every save writes <code>editor_patches\my-changes.flpatch.json</code>: your changes compared with the original files, one by one — INI changes per section and key (a section is recognised again by its name and nickname or other identifying key; repeated lines such as MarketGood by their first value), string and infocard texts per id, other files whole. Ten older versions are kept in <code>editor_patches\history</code>. At start-up the editor checks whether files of the patch were replaced outside it (a mod update); it then stops refreshing the patch and offers <span class="menu">File → Re-apply my changes after a mod update…</span>. Re-applying shows each change as <i>apply</i>, <i>already there</i>, <i>decide</i> (the new version changed the same thing: use mine / keep this version's) or <i>cannot</i>, and applies them as one undo step; <kbd>Ctrl</kbd>+<kbd>S</kbd> writes the files. “Start a new baseline” moves <code>editor_backups</code> to <code>editor_backups_old\&lt;date&gt;</code> (nothing is deleted) so later comparisons use the new version. <b>Files are fine — rebuild the patch</b> is for files you replaced yourself on purpose. <b>Download patch</b> / <b>Re-apply a patch file…</b> move a patch to another installation.</p>
+
+<h2 id="trouble">Troubleshooting</h2>
+<table>
+<tr><th>Problem</th><th>What to do</th></tr>
+<tr><td>The editor feels slow or busy</td><td>The 3D view redraws at full speed only while you work in it; when nothing moves it drops to 5 frames a second, behind dialogs to one frame every 2 seconds, and it pauses while the editor reads many files (all systems, pre-flight, trade planner, opening a system). If it is still slow, close other GPU-heavy programs or switch off <i>Asteroid fields &amp; nebulae (3D)</i> in the View menu.</td></tr>
+<tr><td>Saving a DLL fails</td><td>Freelancer is still running. Close it and press <kbd>Ctrl</kbd>+<kbd>S</kbd> again.</td></tr>
+<tr><td>The game crashes after an edit</td><td>Open the <a href="#crash">Crash &amp; log analyser</a> with FLSpew.txt, run <span class="menu">Validate all systems</span>, then <span class="menu">File → Review changes…</span> to see what changed and <b>Restore original</b> on the suspect file.</td></tr>
+<tr><td>A change made outside the editor is not shown</td><td><span class="menu">File → Reload system from disk</span>, or restart <code>start.bat</code>.</td></tr>
+<tr><td>Names show as numbers</td><td>A resource DLL listed in <code>freelancer.ini</code> is missing; the status bar says which.</td></tr>
+<tr><td>Shortcuts do nothing</td><td>Click the 3D view first; shortcuts are paused while typing in a field or while a dialog is open (<kbd>Ctrl</kbd>+<kbd>S</kbd> always works).</td></tr>
+<tr><td>The page is blank</td><td>Check the console window for errors, then reload the page with <kbd>Ctrl</kbd>+<kbd>F5</kbd>.</td></tr>
+</table>
+
+<h2 id="keys">Keyboard &amp; mouse</h2>
+<table>
+<tr><th>Key</th><th>Action</th></tr>
+<tr><td>Left drag · right/middle drag · wheel</td><td>orbit · pan · zoom to cursor</td></tr>
+<tr><td><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> <kbd>Q</kbd><kbd>E</kbd> (+<kbd>Shift</kbd>)</td><td>fly (click the view first)</td></tr>
+<tr><td><kbd>G</kbd> / <kbd>R</kbd> / <kbd>V</kbd> · <kbd>X</kbd></td><td>move / rotate / select only · world/local space</td></tr>
+<tr><td><kbd>T</kbd> · <kbd>F</kbd> · <kbd>Home</kbd> · <kbd>L</kbd></td><td>top view · focus selection · frame all · cycle labels</td></tr>
+<tr><td><kbd>Z</kbd> · <kbd>Shift</kbd>+<kbd>A</kbd></td><td>draw a zone · add object</td></tr>
+<tr><td><kbd>Ctrl</kbd>+<kbd>C</kbd>/<kbd>V</kbd>/<kbd>D</kbd> · <kbd>Del</kbd></td><td>copy / paste / duplicate · delete</td></tr>
+<tr><td><kbd>Ctrl</kbd>+<kbd>Z</kbd> / <kbd>Ctrl</kbd>+<kbd>Y</kbd> · <kbd>Ctrl</kbd>+<kbd>S</kbd></td><td>undo / redo · save all</td></tr>
+<tr><td><kbd>Ctrl</kbd>+<kbd>F</kbd> · <kbd>Ctrl</kbd>+<kbd>I</kbd> · <kbd>Ctrl</kbd>+<kbd>B</kbd> · <kbd>Ctrl</kbd>+<kbd>M</kbd></td><td>find · strings &amp; infocards · characters &amp; news · trade planner</td></tr>
+<tr><td><kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>E</kbd> · <kbd>F1</kbd></td><td>show selection in INI (VS Code) · this guide</td></tr>
+<tr><td><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>F</kbd> · <kbd>F5</kbd></td><td>find references / rename everywhere · playtest here</td></tr>
+</table>
+</main>
+</div>
+</body>
+</html>

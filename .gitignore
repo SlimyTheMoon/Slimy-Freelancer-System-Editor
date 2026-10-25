@@ -1,0 +1,14 @@
+# local settings (game folder chosen in the editor)
+config.json
+# build output
+*.vsix
+node_modules/
+# bundled Node.js runtime for Windows (start.bat), not part of the source
+runtime/
+# OS / editor files
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+*.log
+__pycache__/

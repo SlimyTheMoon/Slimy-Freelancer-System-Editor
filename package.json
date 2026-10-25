@@ -1,0 +1,10 @@
+{
+  "name": "fl-system-editor",
+  "version": "1.22.2",
+  "description": "Freelancer system editor (local web app) - edits universe and system INI files with a 3D view",
+  "main": "server.js",
+  "scripts": { "start": "node server.js" },
+  "engines": { "node": ">=18" },
+  "license": "MIT",
+  "private": true
+}

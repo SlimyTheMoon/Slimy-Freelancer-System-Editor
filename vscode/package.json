@@ -1,0 +1,34 @@
+{
+  "name": "freelancer-system-editor",
+  "displayName": "Freelancer System Editor",
+  "description": "3D system, universe, field, encounter, market and resource-DLL editor for Freelancer (2003), inside VS Code.",
+  "version": "1.22.2",
+  "publisher": "fled",
+  "license": "MIT",
+  "engines": { "vscode": "^1.80.0" },
+  "categories": ["Other", "Visualization"],
+  "keywords": ["Freelancer", "modding", "ini", "3d"],
+  "icon": "icon.png",
+  "main": "./extension.js",
+  "activationEvents": ["onLanguage:ini", "workspaceContains:**/freelancer.ini"],
+  "repository": { "type": "git", "url": "https://localhost/fled" },
+  "contributes": {
+    "commands": [
+      { "command": "freelancerSystemEditor.open", "title": "Open System Editor", "category": "Freelancer" },
+      { "command": "freelancerSystemEditor.openFile", "title": "Open in Freelancer System Editor", "category": "Freelancer" },
+      { "command": "freelancerSystemEditor.setInstall", "title": "Set Freelancer Install Folder…", "category": "Freelancer" }
+    ],
+    "menus": {
+      "explorer/context": [ { "command": "freelancerSystemEditor.openFile", "when": "resourceExtname =~ /\\.ini$/i", "group": "navigation@90" } ],
+      "editor/context": [ { "command": "freelancerSystemEditor.openFile", "when": "resourceExtname =~ /\\.ini$/i", "group": "navigation@90" } ],
+      "editor/title": [ { "command": "freelancerSystemEditor.openFile", "when": "resourceExtname =~ /\\.ini$/i", "group": "navigation" } ]
+    },
+    "configuration": {
+      "title": "Freelancer System Editor",
+      "properties": {
+        "freelancerSystemEditor.installDir": { "type": "string", "default": "", "description": "Freelancer install folder (contains DATA and EXE). Empty = detect from the open workspace." },
+        "freelancerSystemEditor.port": { "type": "number", "default": 0, "description": "Port for the editor's local server (0 = 5718, or any free port if that is taken)." }
+      }
+    }
+  }
+}

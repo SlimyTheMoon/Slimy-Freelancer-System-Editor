@@ -1,0 +1,1042 @@
+{
+ "source": "Community binary patches for Freelancer.",
+ "patches": [
+  {
+   "id": "typing-sound",
+   "category": "Interface",
+   "title": "No UI typing sounds",
+   "module": "freelancer.exe",
+   "edits": [
+    {
+     "off": 1618247,
+     "orig": "E8 04 95 FD FF",
+     "new": "90 90 90 90 90"
+    }
+   ],
+   "desc": "Removes the call that plays the character typing sound for UI text.",
+   "author": "BC46",
+   "verified": [
+    "orig"
+   ]
+  },
+  {
+   "id": "arrival-typing",
+   "category": "Interface",
+   "title": "No typing effect on arrival text",
+   "module": "freelancer.exe",
+   "edits": [
+    {
+     "off": 371773,
+     "orig": "FC",
+     "new": "FF"
+    }
+   ],
+   "desc": "System/zone arrival text appears at once.",
+   "author": "Adoxa",
+   "verified": [
+    "orig"
+   ]
+  },
+  {
+   "id": "target-typing",
+   "category": "Interface",
+   "title": "No typing effect on target names",
+   "module": "freelancer.exe",
+   "edits": [
+    {
+     "off": 921883,
+     "orig": "01",
+     "new": "00"
+    },
+    {
+     "off": 922031,
+     "orig": "01",
+     "new": "00"
+    },
+    {
+     "off": 924257,
+     "orig": "01",
+     "new": "00"
+    },
+    {
+     "off": 926159,
+     "orig": "01",
+     "new": "00"
+    },
+    {
+     "off": 930486,
+     "orig": "01",
+     "new": "00"
+    },
+    {
+     "off": 930506,
+     "orig": "01",
+     "new": "00"
+    },
+    {
+     "off": 935858,
+     "orig": "01",
+     "new": "00"
+    },
+    {
+     "off": 935878,
+     "orig": "01",
+     "new": "00"
+    }
+   ],
+   "desc": "Target ship and sub-target names appear at once (all eight sites).",
+   "author": "Adoxa",
+   "verified": [
+    "orig"
+   ]
+  },
+  {
+   "id": "auto-infocards",
+   "category": "Interface",
+   "title": "No automatic infocards",
+   "module": "freelancer.exe",
+   "edits": [
+    {
+     "off": 540851,
+     "orig": "0F 84",
+     "new": "90 E9"
+    }
+   ],
+   "desc": "Stops infocards popping up automatically.",
+   "author": "",
+   "verified": [
+    "orig"
+   ]
+  },
+  {
+   "id": "auto-rename",
+   "category": "Interface",
+   "title": "Keep names of marked objects",
+   "module": "freelancer.exe",
+   "edits": [
+    {
+     "off": 864640,
+     "orig": "E6",
+     "new": "00"
+    }
+   ],
+   "desc": "Disables the automatic renaming of marked objects.",
+   "author": "",
+   "verified": [
+    "orig"
+   ]
+  },
+  {
+   "id": "lead-unselected",
+   "category": "Interface",
+   "title": "Lead indicator for unselected targets",
+   "module": "freelancer.exe",
+   "edits": [
+    {
+     "off": 967302,
+     "orig": "0F 84",
+     "new": "90 E9"
+    },
+    {
+     "off": 967304,
+     "orig": "2A 01",
+     "new": "00 00"
+    }
+   ],
+   "desc": "Shows the aiming lead indicator also when nothing is selected.",
+   "author": "",
+   "verified": [
+    "orig"
+   ]
+  },
+  {
+   "id": "lead-solars",
+   "category": "Interface",
+   "title": "Lead red X on solars",
+   "module": "freelancer.exe",
+   "edits": [
+    {
+     "off": 984155,
+     "orig": "86 01",
+     "new": "00 00"
+    }
+   ],
+   "desc": "Displays the aiming lead red X on solars too.",
+   "author": "",
+   "verified": [
+    "orig"
+   ]
+  },
+  {
+   "id": "waypoint-size",
+   "category": "Interface",
+   "title": "Waypoint size",
+   "module": "freelancer.exe",
+   "edits": [
+    {
+     "off": 1939380,
+     "type": "f",
+     "suggest": null,
+     "label": "size",
+     "install": 150.0
+    }
+   ],
+   "desc": "Size of the waypoint marker.",
+   "author": "",
+   "verified": []
+  },
+  {
+   "id": "navmap-zoom",
+   "category": "Interface",
+   "title": "System navmap zoom",
+   "module": "freelancer.exe",
+   "edits": [
+    {
+     "off": 1916712,
+     "type": "d",
+     "suggest": null,
+     "label": "zoom amount",
+     "install": 0.1162791
+    }
+   ],
+   "desc": "How far the system navmap zooms in.",
+   "author": "",
+   "verified": []
+  },
+  {
+   "id": "navmap-limit",
+   "category": "Interface",
+   "title": "Navmap map limits",
+   "module": "freelancer.exe",
+   "edits": [
+    {
+     "off": 1915976,
+     "type": "d",
+     "suggest": null,
+     "label": "limit A",
+     "install": 1.5
+    },
+    {
+     "off": 1915984,
+     "type": "d",
+     "suggest": null,
+     "label": "limit B",
+     "install": 1.175
+    },
+    {
+     "off": 1913188,
+     "type": "f",
+     "suggest": null,
+     "label": "limit C",
+     "install": 0.279
+    },
+    {
+     "off": 1913164,
+     "type": "f",
+     "suggest": null,
+     "label": "limit D",
+     "install": 0.252
+    },
+    {
+     "off": 1913192,
+     "type": "f",
+     "suggest": null,
+     "label": "limit E",
+     "install": 0.07
+    }
+   ],
+   "desc": "Values that bound the navmap; raise them for systems larger than vanilla.",
+   "author": "",
+   "verified": []
+  },
+  {
+   "id": "scanner-solars",
+   "category": "Interface",
+   "title": "Scanner range for special solars",
+   "module": "freelancer.exe",
+   "edits": [
+    {
+     "off": 2178756,
+     "type": "f",
+     "suggest": null,
+     "label": "range",
+     "install": 200.0
+    }
+   ],
+   "desc": "Detection range of special solars on the scanner.",
+   "author": "",
+   "verified": []
+  },
+  {
+   "id": "light-show",
+   "category": "Visuals",
+   "title": "Show distance of equipped lights",
+   "module": "freelancer.exe",
+   "edits": [
+    {
+     "off": 2178760,
+     "type": "f",
+     "suggest": 10000,
+     "label": "distance",
+     "install": 10000.0
+    }
+   ],
+   "desc": "Raises the show limit for equipped lights (used for flare stars).",
+   "author": "",
+   "verified": []
+  },
+  {
+   "id": "mp-button",
+   "category": "Interface",
+   "title": "Hide the Multiplayer button",
+   "module": "freelancer.exe",
+   "edits": [
+    {
+     "off": 1469483,
+     "orig": "75",
+     "new": "EB"
+    }
+   ],
+   "desc": "Removes the multiplayer game button from the main menu.",
+   "author": "",
+   "verified": [
+    "new"
+   ]
+  },
+  {
+   "id": "shake-under-fire",
+   "category": "Camera",
+   "title": "No screen shake under fire",
+   "module": "freelancer.exe",
+   "edits": [
+    {
+     "off": 1170244,
+     "orig": "74",
+     "new": "EB"
+    }
+   ],
+   "desc": "Disables the camera shake when your ship is hit.",
+   "author": "",
+   "verified": [
+    "orig"
+   ]
+  },
+  {
+   "id": "shake-amount",
+   "category": "Camera",
+   "title": "Screen shake strength",
+   "module": "freelancer.exe",
+   "edits": [
+    {
+     "off": 1170268,
+     "type": "f",
+     "suggest": null,
+     "label": "shake A",
+     "install": 0.02
+    },
+    {
+     "off": 1170313,
+     "type": "f",
+     "suggest": null,
+     "label": "shake B",
+     "install": 0.005
+    }
+   ],
+   "desc": "Strength of the screen shake under fire.",
+   "author": "",
+   "verified": []
+  },
+  {
+   "id": "turret-roll",
+   "category": "Camera",
+   "title": "No auto-roll in turret view",
+   "module": "freelancer.exe",
+   "edits": [
+    {
+     "off": 900624,
+     "orig": "94",
+     "new": "95"
+    },
+    {
+     "off": 1155539,
+     "orig": "94",
+     "new": "95"
+    }
+   ],
+   "desc": "Stops the ship rolling automatically while in turret view.",
+   "author": "",
+   "verified": [
+    "orig"
+   ]
+  },
+  {
+   "id": "cruise-hud",
+   "category": "Flight",
+   "title": "Cruise speed shown on the HUD",
+   "module": "freelancer.exe",
+   "edits": [
+    {
+     "off": 1932928,
+     "type": "f",
+     "suggest": 600,
+     "label": "cruise speed (HUD)",
+     "install": 300.0
+    }
+   ],
+   "desc": "Speed used by the HUD to show and check cruise. Change together with the cruise speed in constants.ini / common.dll.",
+   "author": "",
+   "verified": []
+  },
+  {
+   "id": "nebula-distance",
+   "category": "Visuals",
+   "title": "Larger nebula exclusion zones / render distance",
+   "module": "freelancer.exe",
+   "edits": [
+    {
+     "off": 1164243,
+     "orig": "75",
+     "new": "EB"
+    },
+    {
+     "off": 1906104,
+     "type": "f",
+     "suggest": null,
+     "label": "distance\u00b2",
+     "install": 100000000.0
+    }
+   ],
+   "desc": "Lets nebula exclusion zones and rendering reach further.",
+   "author": "",
+   "verified": [
+    "orig"
+   ]
+  },
+  {
+   "id": "cutscene-aspect",
+   "category": "Visuals",
+   "title": "Cutscene aspect ratio",
+   "module": "freelancer.exe",
+   "edits": [
+    {
+     "off": 1871904,
+     "type": "f",
+     "suggest": null,
+     "label": "aspect",
+     "install": 1.85
+    }
+   ],
+   "desc": "Aspect ratio used for cinematics (1.85 by default).",
+   "author": "",
+   "verified": []
+  },
+  {
+   "id": "fps-25",
+   "category": "Fixes",
+   "title": "Framerate lock at 25 fix",
+   "module": "freelancer.exe",
+   "edits": [
+    {
+     "off": 1411604,
+     "orig": "D9 1D 0C 0A 61 00",
+     "new": "90 90 90 90 90 90"
+    }
+   ],
+   "desc": "Fixes the framerate randomly locking at 25.",
+   "author": "",
+   "verified": [
+    "orig"
+   ]
+  },
+  {
+   "id": "background-run",
+   "category": "Fixes",
+   "title": "Keep running in the background",
+   "module": "freelancer.exe",
+   "edits": [
+    {
+     "off": 1779301,
+     "orig": "74",
+     "new": "EB"
+    }
+   ],
+   "desc": "Freelancer keeps running when its window loses focus.",
+   "author": "",
+   "verified": [
+    "orig"
+   ]
+  },
+  {
+   "id": "equip-cargo",
+   "category": "Rules",
+   "title": "Equipment uses no cargo space",
+   "module": "freelancer.exe",
+   "edits": [
+    {
+     "off": 538799,
+     "orig": "74",
+     "new": "EB"
+    }
+   ],
+   "desc": "Mounted equipment no longer takes up cargo space (see linked topic).",
+   "author": "",
+   "verified": [
+    "orig"
+   ]
+  },
+  {
+   "id": "ship-class",
+   "category": "Rules",
+   "title": "Ignore ship class for equipment",
+   "module": "freelancer.exe",
+   "edits": [
+    {
+     "off": 510275,
+     "orig": "0F 87",
+     "new": "90 E9"
+    }
+   ],
+   "desc": "Removes the ship class restriction when buying equipment.",
+   "author": "",
+   "verified": [
+    "orig"
+   ]
+  },
+  {
+   "id": "sp-levels",
+   "category": "Rules",
+   "title": "No level requirements (open single player)",
+   "module": "freelancer.exe",
+   "edits": [
+    {
+     "off": 525465,
+     "orig": "74",
+     "new": "EB"
+    },
+    {
+     "off": 536213,
+     "orig": "74",
+     "new": "EB"
+    },
+    {
+     "off": 758925,
+     "orig": "74",
+     "new": "EB"
+    }
+   ],
+   "desc": "Removes level requirements for ships and equipment in open single player.",
+   "author": "",
+   "verified": [
+    "orig"
+   ]
+  },
+  {
+   "id": "rank-even",
+   "category": "Rules",
+   "title": "Evenly incremented rank",
+   "module": "freelancer.exe",
+   "edits": [
+    {
+     "off": 457239,
+     "orig": "01",
+     "new": "00"
+    }
+   ],
+   "desc": "Rank rises evenly instead of by the vanilla table.",
+   "author": "",
+   "verified": [
+    "orig"
+   ]
+  },
+  {
+   "id": "sell-price",
+   "category": "Rules",
+   "title": "Price bases pay for equipment",
+   "module": "freelancer.exe",
+   "edits": [
+    {
+     "off": 1904172,
+     "type": "f",
+     "suggest": null,
+     "label": "factor (client)",
+     "install": 0.3
+    }
+   ],
+   "desc": "Fraction of the price a base pays when you sell equipment. Change server.dll too.",
+   "author": "",
+   "verified": []
+  },
+  {
+   "id": "sell-price-server",
+   "category": "Rules",
+   "title": "Price bases pay for equipment (server)",
+   "module": "server.dll",
+   "edits": [
+    {
+     "off": 568956,
+     "type": "f",
+     "suggest": null,
+     "label": "factor (server)",
+     "install": 0.3
+    }
+   ],
+   "desc": "Server side of the sell price factor.",
+   "author": "",
+   "verified": []
+  },
+  {
+   "id": "dyn-asteroids",
+   "category": "Visuals",
+   "title": "Dynamic asteroids",
+   "module": "freelancer.exe",
+   "edits": [
+    {
+     "off": 1168001,
+     "orig": "1D",
+     "new": "00"
+    }
+   ],
+   "desc": "Linked to the dynamic asteroids topic.",
+   "author": "",
+   "verified": [
+    "orig"
+   ]
+  },
+  {
+   "id": "alt-tab-audio",
+   "category": "Sound",
+   "title": "Keep audio when Alt-Tabbed",
+   "module": "soundmanager.dll",
+   "edits": [
+    {
+     "off": 40993,
+     "orig": "00",
+     "new": "80"
+    }
+   ],
+   "desc": "Audio keeps playing in the background. Apply together with the soundstreamer.dll patch.",
+   "author": "Adoxa",
+   "verified": [
+    "orig"
+   ]
+  },
+  {
+   "id": "alt-tab-audio-2",
+   "category": "Sound",
+   "title": "Keep music when Alt-Tabbed",
+   "module": "soundstreamer.dll",
+   "edits": [
+    {
+     "off": 6313,
+     "orig": "00",
+     "new": "80"
+    }
+   ],
+   "desc": "Streamed music keeps playing in the background.",
+   "author": "Adoxa",
+   "verified": [
+    "orig"
+   ]
+  },
+  {
+   "id": "no-sfx",
+   "category": "Sound",
+   "title": "Turn off non-music sounds",
+   "module": "soundmanager.dll",
+   "edits": [
+    {
+     "off": 35256,
+     "orig": "74",
+     "new": "EB"
+    }
+   ],
+   "desc": "Silences everything except music.",
+   "author": "Venemon",
+   "verified": [
+    "orig"
+   ]
+  },
+  {
+   "id": "npc-gunfire",
+   "category": "AI",
+   "title": "Fix broken NPC gunfire behaviour",
+   "module": "common.dll",
+   "edits": [
+    {
+     "off": 230800,
+     "orig": "83 EC 34 53 56",
+     "new": "B0 01 C2 04 00"
+    }
+   ],
+   "desc": "Fixes NPCs that stop firing.",
+   "author": "",
+   "verified": [
+    "orig"
+   ]
+  },
+  {
+   "id": "npc-gunfire-angle",
+   "category": "AI",
+   "title": "NPC gunfire angle",
+   "module": "common.dll",
+   "edits": [
+    {
+     "off": 565637,
+     "type": "f",
+     "suggest": 0.0523599,
+     "label": "angle A (rad)",
+     "install": 0.0523599
+    },
+    {
+     "off": 568981,
+     "type": "f",
+     "suggest": 0.0523599,
+     "label": "angle B (rad)",
+     "install": 0.0523599
+    }
+   ],
+   "desc": "Angle values from the same NPC gunfire fix (0.0524 rad = 3\u00b0).",
+   "author": "",
+   "verified": []
+  },
+  {
+   "id": "npc-gate-dock",
+   "category": "AI",
+   "title": "NPC jump gate docking fix",
+   "module": "common.dll",
+   "edits": [
+    {
+     "off": 568791,
+     "orig": "07",
+     "new": "00"
+    }
+   ],
+   "desc": "Fixes NPC fighters docking with jump gates (HpDockMount problems).",
+   "author": "",
+   "verified": [
+    "orig"
+   ]
+  },
+  {
+   "id": "attack-pref",
+   "category": "AI",
+   "title": "Multi-line attack_preference",
+   "module": "common.dll",
+   "edits": [
+    {
+     "off": 583384,
+     "orig": "74",
+     "new": "EB"
+    }
+   ],
+   "desc": "Makes every attack_preference line in pilots.ini count, not only the first.",
+   "author": "",
+   "verified": [
+    "orig"
+   ]
+  },
+  {
+   "id": "ai-cm",
+   "category": "AI",
+   "title": "Proper AI countermeasure use",
+   "module": "common.dll",
+   "edits": [
+    {
+     "off": 1303852,
+     "orig": "04",
+     "new": "00"
+    }
+   ],
+   "desc": "NPCs use countermeasures properly.",
+   "author": "",
+   "verified": [
+    "orig"
+   ]
+  },
+  {
+   "id": "nudge-force",
+   "category": "AI",
+   "title": "Object avoidance nudge force",
+   "module": "common.dll",
+   "edits": [
+    {
+     "off": 1304272,
+     "type": "f",
+     "suggest": 1.5,
+     "label": "nudge force",
+     "install": 1.5
+    }
+   ],
+   "desc": "Object avoidance force; 1.5 disables it.",
+   "author": "",
+   "verified": []
+  },
+  {
+   "id": "autopilot-helper",
+   "category": "AI",
+   "title": "Autopilot helper value",
+   "module": "common.dll",
+   "edits": [
+    {
+     "off": 1304276,
+     "type": "f",
+     "suggest": null,
+     "label": "value",
+     "install": 50.0
+    }
+   ],
+   "desc": "Helper value used by all AI functions (autopilot).",
+   "author": "",
+   "verified": []
+  },
+  {
+   "id": "auto-cruise",
+   "category": "Flight",
+   "title": "Auto-cruise distance",
+   "module": "common.dll",
+   "edits": [
+    {
+     "off": 1319664,
+     "type": "f",
+     "suggest": null,
+     "label": "distance",
+     "install": 1750.0
+    }
+   ],
+   "desc": "Distance used by the auto-cruise function.",
+   "author": "",
+   "verified": []
+  },
+  {
+   "id": "cruise-engine",
+   "category": "Flight",
+   "title": "Cruise engine values",
+   "module": "common.dll",
+   "edits": [
+    {
+     "off": 1307596,
+     "type": "f",
+     "suggest": null,
+     "label": "A",
+     "install": 2500.0
+    },
+    {
+     "off": 1307712,
+     "type": "d",
+     "suggest": null,
+     "label": "B",
+     "install": 0.125
+    },
+    {
+     "off": 1307736,
+     "type": "d",
+     "suggest": null,
+     "label": "C",
+     "install": 0.4
+    },
+    {
+     "off": 1307720,
+     "type": "d",
+     "suggest": null,
+     "label": "D",
+     "install": 400.0
+    }
+   ],
+   "desc": "Cruise engine constants.",
+   "author": "",
+   "verified": []
+  },
+  {
+   "id": "ship-shake",
+   "category": "Visuals",
+   "title": "Ship shaking",
+   "module": "common.dll",
+   "edits": [
+    {
+     "off": 973636,
+     "type": "f",
+     "suggest": null,
+     "label": "amount",
+     "install": 0.01
+    }
+   ],
+   "desc": "Ship shaking amount.",
+   "author": "",
+   "verified": []
+  },
+  {
+   "id": "spin-dock",
+   "category": "Flight",
+   "title": "Docking spin speed",
+   "module": "common.dll",
+   "edits": [
+    {
+     "off": 328999,
+     "type": "f",
+     "suggest": null,
+     "label": "A",
+     "install": 1.0
+    },
+    {
+     "off": 450067,
+     "type": "f",
+     "suggest": null,
+     "label": "B",
+     "install": 0.5
+    }
+   ],
+   "desc": "Ship spinning / docking speed values.",
+   "author": "",
+   "verified": []
+  },
+  {
+   "id": "radiation-fix",
+   "category": "Fixes",
+   "title": "Radiation damage fix",
+   "module": "common.dll",
+   "edits": [
+    {
+     "off": 308434,
+     "orig": "1E",
+     "new": "0E"
+    },
+    {
+     "off": 308610,
+     "orig": "1E",
+     "new": "0E"
+    },
+    {
+     "off": 308798,
+     "orig": "1E",
+     "new": "0E"
+    }
+   ],
+   "desc": "Fix for radiation zone damage.",
+   "author": "",
+   "verified": [
+    "orig"
+   ]
+  },
+  {
+   "id": "mp-undock-chatter",
+   "category": "Multiplayer",
+   "title": "Undock chatter in multiplayer",
+   "module": "server.dll",
+   "edits": [
+    {
+     "off": 95194,
+     "orig": "74",
+     "new": "EB"
+    }
+   ],
+   "desc": "Enables the undock radio chatter in multiplayer.",
+   "author": "",
+   "verified": [
+    "orig"
+   ]
+  },
+  {
+   "id": "missile-hull",
+   "category": "Fixes",
+   "title": "Missile explosion hull damage detection",
+   "module": "server.dll",
+   "edits": [
+    {
+     "off": 38412,
+     "orig": "0C",
+     "new": "00"
+    }
+   ],
+   "desc": "Missile explosions are detected against hulls.",
+   "author": "",
+   "verified": [
+    "new"
+   ]
+  },
+  {
+   "id": "npc-disappear",
+   "category": "Multiplayer",
+   "title": "NPC disappear / effect draw distance\u00b2",
+   "module": "server.dll",
+   "edits": [
+    {
+     "off": 551660,
+     "type": "f",
+     "suggest": null,
+     "label": "distance\u00b2",
+     "install": 6250000.0
+    }
+   ],
+   "desc": "Squared distance used for NPC despawn in MP, vis_beam draw distance and base friendliness on undock. 6250000 = 2500 m.",
+   "author": "",
+   "verified": []
+  },
+  {
+   "id": "big-names",
+   "category": "Interface",
+   "title": "Big ship names on freighters",
+   "module": "content.dll",
+   "edits": [
+    {
+     "off": 596516,
+     "orig": "03",
+     "new": "01"
+    }
+   ],
+   "desc": "Shows big ship names for freighter-type ships.",
+   "author": "",
+   "verified": []
+  },
+  {
+   "id": "npc-spawn",
+   "category": "AI",
+   "title": "NPC spawning check",
+   "module": "content.dll",
+   "edits": [
+    {
+     "off": 792433,
+     "orig": "7A",
+     "new": "EB"
+    }
+   ],
+   "desc": "From the \"how NPC spawning works\" topic.",
+   "author": "",
+   "verified": []
+  },
+  {
+   "id": "max-rep",
+   "category": "Rules",
+   "title": "Maximum achievable reputation",
+   "module": "content.dll",
+   "edits": [
+    {
+     "off": 1161520,
+     "type": "d",
+     "suggest": null,
+     "label": "max"
+    }
+   ],
+   "desc": "Highest reputation the player can reach.",
+   "author": "",
+   "verified": []
+  },
+  {
+   "id": "mp-warning",
+   "category": "Multiplayer",
+   "title": "No Microsoft multiplayer warning",
+   "module": "ebueula.dll",
+   "edits": [
+    {
+     "off": 6624,
+     "orig": "83 EC 08",
+     "new": "89 F0 C3"
+    }
+   ],
+   "desc": "Removes the Microsoft warning dialog before multiplayer.",
+   "author": "",
+   "verified": [
+    "new"
+   ]
+  }
+ ]
+}

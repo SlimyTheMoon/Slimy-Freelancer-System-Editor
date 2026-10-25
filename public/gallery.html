@@ -1,0 +1,48 @@
+<!doctype html><html><head><meta charset="utf-8"><style>body{margin:0;background:#111;color:#ddd;font:11px sans-serif}#g{display:grid;grid-template-columns:repeat(var(--cols),1fr)}.t{position:relative;border:1px solid #333;height:var(--h)}.t span{position:absolute;left:3px;top:2px;text-shadow:0 0 3px #000;z-index:2}canvas{position:fixed;inset:0;pointer-events:none}</style>
+<script type="importmap">{ "imports": { "three": "./vendor/three/three.module.js", "three/addons/": "./vendor/three/addons/" } }</script></head><body><div id="g"></div>
+<script type="module">
+import * as THREE from 'three';
+import { api, dataPath } from './js/api.js';
+import { ResourceManager } from './js/formats/model.js';
+import { loadIni } from './js/gamedata.js';
+const q = new URLSearchParams(location.search);
+const cols = +(q.get('cols')||6), H = +(q.get('h')||220);
+document.body.style.setProperty('--cols', cols); document.body.style.setProperty('--h', H+'px');
+const rm = new ResourceManager(api);
+const list = [];
+const ini = q.get('ini') || 'solar\\solararch.ini', sec = q.get('sec') || 'Solar';
+const doc = await loadIni(dataPath(ini));
+const filt = q.get('f') ? new RegExp(q.get('f'), 'i') : null;
+for (const s of doc.all(sec)) { const da = s.get('DA_archetype'); if (!da) continue; if (filt && !filt.test(s.get('nickname') + ' ' + da)) continue; list.push({ name: s.get('nickname'), da, libs: s.getAll('material_library') }); }
+const start = +(q.get('start')||0), n = +(q.get('n')||36);
+const items = list.slice(start, start+n);
+const renderer = new THREE.WebGLRenderer({ antialias: true, logarithmicDepthBuffer: true });
+renderer.setSize(innerWidth, innerHeight); renderer.setScissorTest(true); renderer.outputColorSpace = THREE.SRGBColorSpace;
+document.body.append(renderer.domElement);
+const g = document.getElementById('g');
+const tiles = [];
+for (const it of items) {
+  const d = document.createElement('div'); d.className = 't'; d.innerHTML = `<span>${it.name}<br>${it.da.split('\\').pop()}</span>`; g.append(d);
+  const scene = new THREE.Scene(); scene.background = new THREE.Color(0x1a1f28);
+  scene.add(new THREE.HemisphereLight(0xffffff, 0x445566, 1.4)); const dl = new THREE.DirectionalLight(0xffffff, 1.5); dl.position.set(1, 1.5, 1); scene.add(dl);
+  const cam = new THREE.PerspectiveCamera(40, 1, 1, 1e7);
+  tiles.push({ d, scene, cam, it });
+}
+let errs = [];
+await Promise.all(tiles.map(async t => {
+  try {
+    const m = await rm.model(dataPath(t.it.da), t.it.libs.map(dataPath));
+    if (!m) { errs.push(t.it.name + ' null'); return; }
+    t.scene.add(m);
+    const box = new THREE.Box3().setFromObject(m); const s = box.getBoundingSphere(new THREE.Sphere());
+    const dir = new THREE.Vector3(...(q.get('dir')||'1,0.6,1').split(',').map(Number)).normalize();
+    t.cam.position.copy(s.center).addScaledVector(dir, s.radius * 2.4); t.cam.lookAt(s.center); t.cam.near = s.radius / 50; t.cam.far = s.radius * 50; t.cam.updateProjectionMatrix();
+  } catch (e) { errs.push(t.it.name + ': ' + e.message); }
+}));
+for (const t of tiles) {
+  const r = t.d.getBoundingClientRect(); const y = innerHeight - r.bottom;
+  renderer.setViewport(r.left, y, r.width, r.height); renderer.setScissor(r.left, y, r.width, r.height);
+  t.cam.aspect = r.width / r.height; t.cam.updateProjectionMatrix(); renderer.render(t.scene, t.cam);
+}
+window.galleryDone = { total: list.length, errs };
+</script></body></html>

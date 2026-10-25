@@ -1,0 +1,2 @@
+# keep every file byte-for-byte as committed (no line-ending conversion on any OS)
+* -text

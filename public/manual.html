@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>System Editor Manual</title>
+<style>
+:root {
+  --bg: #2a2a2a; --panel: #333333; --line: #232323; --text: #c4c4c4; --dim: #a0a0a0; --faint: #808080;
+  --accent: #6fa3d8; --ok: #6fbf73; --warn: #e0a64a; --code: #1f1f1f;
+  --ui: "Segoe UI", system-ui, -apple-system, sans-serif; --mono: ui-monospace, "Cascadia Mono", Consolas, monospace;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) { --bg: #ffffff; --panel: #f5f7fa; --line: #dde3ea; --text: #1d2530; --dim: #4b5768; --faint: #7a8698; --accent: #1f6fd1; --ok: #1b8a4b; --warn: #9a6a00; --code: #eef2f6; }
+}
+:root[data-theme="dark"] { --bg: #383838; }
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.65 var(--ui); }
+.wrap { display: grid; grid-template-columns: 260px minmax(0, 1fr); max-width: 1220px; margin: 0 auto; }
+nav { position: sticky; top: 0; height: 100vh; overflow: auto; padding: 24px 12px 24px 20px; border-right: 1px solid var(--line); font-size: 13.5px; }
+nav b { display: block; margin: 0 0 10px; font-size: 14px; }
+nav a { display: block; color: var(--dim); text-decoration: none; padding: 3px 8px; border-radius: 4px; }
+nav a:hover { color: var(--text); background: var(--panel); }
+nav .grp { margin: 14px 0 4px 8px; color: var(--faint); font-size: 11px; text-transform: uppercase; letter-spacing: .06em; }
+main { padding: 28px 44px 90px; min-width: 0; max-width: 900px; }
+h1 { font-size: 30px; margin: 0 0 6px; }
+h2 { font-size: 22px; margin: 52px 0 10px; padding-top: 12px; border-top: 1px solid var(--line); }
+h3 { font-size: 16.5px; margin: 26px 0 6px; }
+.lead { color: var(--dim); font-size: 16.5px; margin-top: 0; }
+a { color: var(--accent); }
+code, kbd { font: 13px var(--mono); background: var(--code); padding: 1px 5px; border-radius: 4px; }
+kbd { border: 1px solid var(--line); border-bottom-width: 2px; }
+ol.steps { padding-left: 0; list-style: none; counter-reset: s; }
+ol.steps > li { counter-increment: s; position: relative; padding: 2px 0 8px 40px; }
+ol.steps > li::before { content: counter(s); position: absolute; left: 0; top: 2px; width: 26px; height: 26px; border-radius: 50%; background: var(--accent); color: #fff; font-weight: 700; font-size: 13px; display: flex; align-items: center; justify-content: center; }
+.note, .tip { border-left: 3px solid var(--warn); background: var(--panel); padding: 8px 14px; border-radius: 0 6px 6px 0; margin: 14px 0; }
+.tip { border-color: var(--ok); }
+table { border-collapse: collapse; width: 100%; margin: 10px 0; font-size: 14px; }
+th, td { text-align: left; padding: 6px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { color: var(--dim); font-weight: 600; }
+.menu { font-weight: 600; white-space: nowrap; }
+figure { margin: 18px 0 22px; }
+figure a { display: block; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: #000; }
+figure img { display: block; width: 100%; height: auto; }
+figcaption { color: var(--dim); font-size: 13px; margin-top: 6px; }
+figure.small { max-width: 560px; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px; margin: 14px 0; }
+.cards a { display: block; padding: 12px 14px; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; text-decoration: none; color: var(--text); }
+.cards a:hover { border-color: var(--accent); }
+.cards b { display: block; color: var(--accent); margin-bottom: 2px; }
+.cards span { color: var(--dim); font-size: 13.5px; }
+.legend { counter-reset: l; padding-left: 0; list-style: none; }
+.legend li { margin: 4px 0; }
+#lightbox { position: fixed; inset: 0; background: rgba(0,0,0,.88); display: none; align-items: center; justify-content: center; z-index: 10; cursor: zoom-out; padding: 20px; }
+#lightbox img { max-width: 100%; max-height: 100%; border-radius: 6px; }
+@media (max-width: 820px) {
+  .wrap { display: block; }
+  nav { position: static; height: auto; border-right: 0; border-bottom: 1px solid var(--line); padding: 16px; }
+  main { padding: 20px 16px 60px; }
+  .menu { white-space: normal; }
+  table, tbody, tr, th, td { display: block; width: 100%; }
+  th { border-bottom: 0; padding-bottom: 0; }
+  td { overflow-wrap: anywhere; }
+}
+</style>
+<script>try { const t = new URLSearchParams(location.search).get('theme'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}</script>
+</head>
+<body>
+<div class="wrap">
+<nav>
+  <b>System Editor Manual</b>
+  <div class="grp">Basics</div>
+  <a href="#welcome">Welcome</a>
+  <a href="#start">Getting started</a>
+  <a href="#screen">The screen</a>
+  <a href="#moving">Moving around &amp; selecting</a>
+  <a href="#seeing">Showing what you need</a>
+  <a href="#safety">Saving safely</a>
+  <div class="grp">Walkthroughs</div>
+  <a href="#w-system">1 · A new system</a>
+  <a href="#w-base">2 · A base with a market</a>
+  <a href="#w-bulk">3 · A defence grid in bulk</a>
+  <a href="#w-mission">4 · A side mission</a>
+  <a href="#w-ship">5 · Check and ship your mod</a>
+  <div class="grp">More</div>
+  <a href="#bigmods">Discovery &amp; other big mods</a>
+  <a href="#updates">Keeping changes across mod updates</a>
+  <a href="#keys">Keyboard &amp; mouse</a>
+  <a href="#trouble">When something goes wrong</a>
+  <a href="guide.html">Reference guide →</a>
+</nav>
+<main>
+
+<h1 id="welcome">Freelancer System Editor — Manual</h1>
+<p class="lead">This manual walks you through the editor by doing real jobs: building a system, adding a base, reworking a defence grid, writing a side mission and shipping the result to players. Every screenshot is from the editor itself, running on the vanilla game.</p>
+<p>For a complete list of what every panel, dialog and menu entry does, see the <a href="guide.html">reference guide</a> (<kbd>F1</kbd> in the editor). This manual is the “how do I…” companion to it.</p>
+
+<div class="cards">
+  <a href="#w-system"><b>Build a new system</b><span>Sun, planets, a station, jump gates, trade lane and routes in one wizard</span></a>
+  <a href="#w-base"><b>Add a base with a market</b><span>Dockable planet, goods for sale, infocard text, bar characters</span></a>
+  <a href="#w-bulk"><b>Edit many objects at once</b><span>Change faction and loadout, rearrange and rename a group</span></a>
+  <a href="#w-mission"><b>Make a side mission</b><span>A destroy, escort, patrol or courier job — then place it in 3D</span></a>
+  <a href="#w-ship"><b>Check and ship your mod</b><span>Pre-flight, in-game test kit, mod .zip and the player installer</span></a>
+  <a href="#bigmods"><b>Work on Discovery</b><span>What is different with very large mods</span></a>
+</div>
+
+<!-- ============================================================== -->
+<h2 id="start">Getting started</h2>
+<h3>Two ways to run it</h3>
+<table>
+<tr><th>In VS Code</th><td>Install <code>freelancer-system-editor-1.17.0.vsix</code> (Extensions → ⋯ → <span class="menu">Install from VSIX…</span>), then run <span class="menu">Freelancer: Open System Editor</span> from the command palette. The editor opens in a tab; right-click a system <code>.ini</code> and choose <span class="menu">Open in Freelancer System Editor</span> to jump straight to it.</td></tr>
+<tr><th>In a browser</th><td>Double-click <code>start.bat</code> in the editor folder. It starts a small local server and opens the editor in your browser. Close that window to stop it.</td></tr>
+</table>
+
+<h3>Choose your game folder</h3>
+<ol class="steps">
+  <li>The editor looks for <code>Freelancer HD Edition</code> next to its own folder. If it finds no game, the <b>Freelancer game folder</b> dialog opens; otherwise use <span class="menu">File → Game folder…</span>.</li>
+  <li>Click <b>Browse…</b> and pick the folder that contains <code>DATA</code> and <code>EXE</code>. Picking <code>DATA</code> or <code>EXE</code> itself works too; the editor moves up to the game folder. The dialog tells you straight away whether Freelancer was found there.</li>
+  <li>Click <b>Use this folder</b>. In VS Code the choice is remembered in the extension settings.</li>
+</ol>
+<div class="tip">Keep one folder per mod (for example a vanilla copy and a Discovery copy) and switch with <span class="menu">File → Game folder…</span>. The editor never touches anything outside the folder you chose.</div>
+
+<!-- ============================================================== -->
+<h2 id="screen">The screen</h2>
+<figure><a href="manual/overview.jpg"><img src="manual/overview.jpg" alt="The editor with New York open and Planet Manhattan selected" loading="lazy"></a>
+<figcaption>New York (Li01) with Planet Manhattan selected.</figcaption></figure>
+<ul class="legend">
+  <li><b>Outliner</b> (left): every object, zone and light in the open system. Search box on top, <b>Objects / Zones / Lights</b> chips to filter, ⚙ for more filters. The <b>Systems</b> tab switches between systems.</li>
+  <li><b>3D view</b> (centre): the system as the game builds it — models, zones, trade lanes, patrol paths, asteroid fields and nebulae. The <b>Universe map</b> tab shows the whole sector.</li>
+  <li><b>Toolbar</b> (above the 3D view): Select / Move / Rotate gizmo, World or Local axes, Snap, 3D or Top view, Frame, and the <b>View</b> preset.</li>
+  <li><b>Properties</b> (right): what you selected — position, rotation, archetype, base and docking, visit flags, infocard and every INI entry. With nothing selected it shows the system itself (music, background, ambient light…).</li>
+  <li><b>Status bar</b> (bottom): what happened last, the cursor position in game metres, and how many items are selected. “All changes saved” in the top right turns into a list of unsaved files when you edit.</li>
+</ul>
+
+<!-- ============================================================== -->
+<h2 id="moving">Moving around &amp; selecting</h2>
+<table>
+<tr><th>Look around</th><td>Left-drag orbits, right- or middle-drag pans, the wheel zooms towards the cursor. Click the 3D view once, then fly with <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> (<kbd>Q</kbd>/<kbd>E</kbd> down/up, <kbd>Shift</kbd> faster).</td></tr>
+<tr><th>Find something</th><td>Type part of a name or nickname in the Outliner, or search INI entries with <code>key=value</code> (for example <code>loadout=li_</code>). Double-click a row (or press <kbd>F</kbd>) to fly to it; <kbd>Home</kbd> frames the whole system. <kbd>Ctrl</kbd>+<kbd>F</kbd> searches all systems.</td></tr>
+<tr><th>Select</th><td>Click in the 3D view or the Outliner. <kbd>Shift</kbd>/<kbd>Ctrl</kbd>+click adds to the selection; <kbd>Ctrl</kbd>+<kbd>A</kbd> selects everything visible; <span class="menu">Edit → Select all of same archetype</span> does what it says.</td></tr>
+<tr><th>Move and rotate</th><td>Drag the arrows (<kbd>G</kbd>) or rings (<kbd>R</kbd>) of the gizmo, or type numbers in Properties. <b>Snap</b> rounds to 100 m / 15° (change in <span class="menu">Tools → Snap settings…</span>). <b>Y=0</b> puts the object on the system plane, where the navmap shows it.</td></tr>
+<tr><th>Top view</th><td><kbd>T</kbd> switches to a flat view from above — the same picture as the in-game navmap, with its grid letters and numbers if you turn on <span class="menu">View → Navmap grid</span>.</td></tr>
+</table>
+
+<!-- ============================================================== -->
+<h2 id="seeing">Showing what you need</h2>
+<p>A busy system like New York has over 500 objects and zones. Three tools keep the view readable.</p>
+
+<h3>What the 3D view draws: eyes and views</h3>
+<p>The Outliner on the left is also the switchboard for the 3D view. It works like layers in an image editor, on three levels, and every level has an <b>eye</b>:</p>
+<table>
+<tr><th>Kind</th><td><b>Objects</b>, <b>Zones</b>, <b>Light sources</b>.</td></tr>
+<tr><th>Category</th><td>Objects: <i>Suns &amp; planets, Stations &amp; docking, Jump gates &amp; holes, Trade lanes, Platforms &amp; satellites, Other objects</i>. Zones: <i>Asteroid fields, Nebulae, Encounter zones, Patrol &amp; trade paths, Exclusion zones, Death zones, Other zones</i>.</td></tr>
+<tr><th>Item</th><td>One object, zone or light (a trade lane row counts as one item).</td></tr>
+</table>
+<p>An item is drawn when its kind, its category and the item itself are all switched on. Kinds and categories apply in every system; item eyes are remembered per system. Nothing is ever written to the game files.</p>
+<figure class="small"><a href="manual/eye.jpg"><img src="manual/eye.jpg" alt="Outliner with category eyes" loading="lazy"></a>
+<figcaption>The Defences view with one jump gate shown on its own and two platforms hidden by hand. The box at the top counts what is not drawn.</figcaption></figure>
+<table>
+<tr><th>Eye (on hover)</th><td>Drawn. Click to hide it.</td></tr>
+<tr><th>Crossed-out eye</th><td>Switched off at this level. Click to switch it on again.</td></tr>
+<tr><th>Faded crossed-out eye</th><td>On at this level, but a level above is off (e.g. the category). Click it to show <b>only this one</b> from that category — the category is switched on and its other items are hidden one by one.</td></tr>
+<tr><th>Eye with a dot</th><td>Switched on, but some items inside are hidden one by one. Click to show them again.</td></tr>
+</table>
+<p>Every eye says what it will do when you point at it. When anything is not drawn, a box at the top of the Outliner counts it, with <b>Show all</b>.</p>
+<p><b>Shortcuts</b> (as in Blender): <kbd>H</kbd> hides the selection, <kbd>Shift+H</kbd> hides everything except the selection, <kbd>Alt+H</kbd> shows everything again. A hidden zone or light that you select is still drawn so you can find it; a hidden object keeps its yellow selection box.</p>
+<p><b>◎ Only listed</b> (next to Objects / Zones / Lights) makes the 3D view draw only what the list shows. Combine it with the search box or the ⚙ filters: for one faction, open ⚙, pick the faction, then click <b>◎ Only listed</b>.</p>
+
+<h3>Views</h3>
+<p>The <b>View</b> dropdown at the right end of the toolbar sets the kind and category eyes in one go (plus labels, paths and grids). Tick one view, or several to combine them — the combination shows everything any of the ticked views shows. <b>Standard</b>, <b>Everything</b> and <b>Clean</b> are single choices. Item eyes are not touched by views.</p>
+<table>
+<tr><th>Standard</th><td>The default: everything except patrol paths, encounter zones and other zones, which clutter most systems.</td></tr>
+<tr><th>Everything</th><td>Every kind and category on.</td></tr>
+<tr><th>Bases, lanes &amp; jumps</th><td>Suns, planets, stations, trade lanes, gates and holes. No zones.</td></tr>
+<tr><th>Zones</th><td>Every zone category with labels, plus suns and planets to find your way.</td></tr>
+<tr><th>Encounters &amp; patrols</th><td>Encounter zones and patrol/trade paths, with the stations and gates they connect.</td></tr>
+<tr><th>Defences</th><td>Weapons platforms, depots and the stations they guard.</td></tr>
+<tr><th>Fields &amp; hazards</th><td>Asteroid fields, nebulae, death and exclusion zones.</td></tr>
+<tr><th>Clean (screenshots)</th><td>Only models and the backdrop — no labels, zones, paths or grid.</td></tr>
+</table>
+<figure><a href="manual/presets.jpg"><img src="manual/presets.jpg" alt="The View dropdown" loading="lazy"></a>
+<figcaption>After clicking an eye by hand the toolbar shows <b>Custom</b>; tick a view to switch back.</figcaption></figure>
+<p>When you click a category eye yourself, the toolbar shows <b>Custom</b>. <b>Save current view…</b> keeps the current eyes, labels and grids as a view of your own; <b>Manage saved views…</b> renames, updates or deletes them.</p>
+
+<h3>The View menu</h3>
+<p>Fine control over what is drawn: models, particle effects, 3D fields, planet rings, sun flares, paths, nebula fog, starsphere, grids and labels (<kbd>L</kbd> cycles important / all / none). <span class="menu">View → Zone categories…</span> picks which kinds of zone are shown.</p>
+
+<!-- ============================================================== -->
+<h2 id="safety">Saving safely</h2>
+<ul>
+  <li>Edits stay in the editor until you press <kbd>Ctrl</kbd>+<kbd>S</kbd> (<span class="menu">File → Save all</span>). <kbd>Ctrl</kbd>+<kbd>Z</kbd> / <kbd>Ctrl</kbd>+<kbd>Y</kbd> undo and redo everything, including wizards.</li>
+  <li>Before a file is written for the first time in a session, the original is copied to <code>editor_backups\&lt;session time&gt;</code> in the game folder; <span class="menu">File → Backups…</span> lists them.</li>
+  <li><span class="menu">File → Review changes…</span> shows every file you changed compared with the original — INI files line by line with the section and nickname, DLLs by string and infocard. <b>Restore original</b> puts a single file back.</li>
+  <li><span class="menu">File → Snapshots (checkpoints)…</span> keeps a named copy of everything you have changed so far (“before the Navy rework”). <b>Restore</b> makes your files match it again; a “Before restoring” snapshot is taken automatically, so even that can be undone.</li>
+  <li>Close Freelancer before saving — Windows locks files the game has open, and the editor tells you if that happens.</li>
+</ul>
+
+<!-- ============================================================== -->
+<h2 id="w-system">Walkthrough 1 · A new system</h2>
+<p>Goal: a new Liberty system with a sun, three planets, a station you can dock at, a jump gate to Colorado, a trade lane and NPC traffic.</p>
+<figure><a href="manual/syswizard.jpg"><img src="manual/syswizard.jpg" alt="New system wizard" loading="lazy"></a>
+<figcaption><span class="menu">Create → New system wizard (complete system)…</span> — the preview on the right updates as you change settings.</figcaption></figure>
+<ol class="steps">
+  <li>Open <span class="menu">Create → New system wizard (complete system)…</span>.</li>
+  <li><b>Name</b> is what players see (“New Frontier”). <b>Nickname</b> is the region prefix plus the next free number; the wizard suggests one (Li06).</li>
+  <li>Click the small universe map at the top right to place the system on the sector map.</li>
+  <li><b>Template system</b> decides the look and sound: music, background, dust, ambient light, space colour, local faction, and which sun and planet models are used. Pick a system that feels like the one you want.</li>
+  <li>Choose the number of planets; <b>🎲 new layout</b> rolls a different arrangement until you like the preview. Each planet gets a name and a death zone.</li>
+  <li>Keep <b>Station with base</b> ticked, give the base a name and choose <b>Copy base from</b>: rooms, bar characters and markets are cloned from that base, so it works in game straight away.</li>
+  <li>Under <b>Jump 1</b> pick the system to connect to and <b>gate</b> or <b>hole</b>. Both ends are created, each facing the other system. Add up to three connections.</li>
+  <li>Click <b>Create system</b>, look around, then press <kbd>Ctrl</kbd>+<kbd>S</kbd> to write all files.</li>
+</ol>
+<figure><a href="manual/universe.jpg"><img src="manual/universe.jpg" alt="Universe map" loading="lazy"></a>
+<figcaption>The <b>Universe map</b> tab: drag systems to move them on the sector map, see every jump connection and open a system with a double-click.</figcaption></figure>
+<h3>Afterwards</h3>
+<ul>
+  <li><b>Routes.</b> The wizard extends the shortest-path files, so NPCs and the navmap can plot routes through the new system. <span class="menu">Tools → Routes (shortest-path files)…</span> checks them for every system and adds what is missing.</li>
+  <li><b>Check.</b> <span class="menu">Tools → Validate system</span> lists problems in the open system; <a href="#w-ship">Pre-flight</a> checks the whole mod.</li>
+  <li><b>Fine-tune.</b> Everything the wizard made is ordinary objects and zones: move planets, add lanes (<span class="menu">Create → Trade lane…</span>) or draw zones (<kbd>Z</kbd>).</li>
+</ul>
+
+<!-- ============================================================== -->
+<h2 id="w-base">Walkthrough 2 · A base with a market</h2>
+<p>Goal: make the moon <b>Maine</b> in New York dockable, sell goods there, give it an infocard and fill its bar.</p>
+<h3>Make it a base</h3>
+<figure class="small"><a href="manual/base.jpg"><img src="manual/base.jpg" alt="Create base dialog" loading="lazy"></a>
+<figcaption><span class="menu">Create → Base for selected object…</span></figcaption></figure>
+<ol class="steps">
+  <li>Select Maine in the Outliner and open <span class="menu">Create → Base for selected object…</span>.</li>
+  <li>The <b>Base nickname</b> and <b>strid_name</b> are filled in for you (the name defaults to the object's own name).</li>
+  <li>Choose a <b>Template base</b>. Its base INI, rooms, bar characters and market are copied — untick what you don't want.</li>
+  <li>Click <b>Create base</b>. The object gets <code>base</code> and <code>dock_with</code>, and the base appears in <code>universe.ini</code>.</li>
+</ol>
+<h3>What the market sells</h3>
+<figure><a href="manual/market.jpg"><img src="manual/market.jpg" alt="Market editor" loading="lazy"></a>
+<figcaption>Properties → <b>Market…</b> (or <kbd>Ctrl</kbd>+<kbd>M</kbd>, <b>Markets</b> tab) — Planet Manhattan's commodities.</figcaption></figure>
+<ul>
+  <li>Select the object and click <b>Market…</b> in Properties.</li>
+  <li><b>Trade</b>: <i>sells</i> means players can buy it here, <i>buys only</i> means the base only takes it. <b>× price</b> multiplies the goods.ini price; <b>Price</b> shows the result. <b>Level</b> and <b>Rep</b> lock items behind player level or reputation.</li>
+  <li>Type a good's name at the bottom and click <b>+ Add</b>. Equipment and ships are in the <b>Equipment &amp; ships</b> section below the commodities.</li>
+  <li>The <b>Routes</b> tab of the same window shows at once whether your prices create a good (or absurd) trade run.</li>
+</ul>
+<h3>Its infocard</h3>
+<figure class="small"><a href="manual/infocard.jpg"><img src="manual/infocard.jpg" alt="Infocard editor" loading="lazy"></a>
+<figcaption>The infocard editor shows the text as the game does.</figcaption></figure>
+<ol class="steps">
+  <li>In Properties, next to <code>ids_info</code>, click <b>✎</b> to edit the text or <b>+</b> to create a new infocard.</li>
+  <li>Type directly. Select text and use <b>B</b> / <b>I</b> / <b>U</b>, the font list and the colour swatches; <kbd>Ctrl</kbd>+<kbd>B</kbd>/<kbd>I</kbd>/<kbd>U</kbd> work too.</li>
+  <li><b>Template…</b> starts from a station or planet card (CLASS, GRAVITY, DOCKING…). <kbd>Ctrl</kbd>+<kbd>Z</kbd> brings your text back if you change your mind.</li>
+  <li><b>↔ game width</b> narrows the editor to the in-game panel so you see where lines wrap. <b>Apply</b> stores it in the DLL; <kbd>Ctrl</kbd>+<kbd>S</kbd> writes the DLL file.</li>
+</ol>
+<h3>The bar</h3>
+<figure><a href="manual/news.jpg"><img src="manual/news.jpg" alt="Base characters and news" loading="lazy"></a>
+<figcaption>Properties → <b>Characters &amp; news…</b> (<kbd>Ctrl</kbd>+<kbd>B</kbd>): rooms and fixtures on the left, characters and their rumours on the right.</figcaption></figure>
+<ul>
+  <li><b>Base characters</b>: the rooms of the base, the fixed NPCs (bartender, dealers) and every bar character with faction, voice, appearance and rumours. <b>+ New</b> or <b>Duplicate</b> adds one.</li>
+  <li><b>News</b>: the news items shown at this base, with the story progress that shows and hides them.</li>
+  <li><span class="menu">Tools → Base interiors…</span> edits the rooms themselves (scenes, hotspots, fixtures) with a 3D view of the room.</li>
+</ul>
+
+<!-- ============================================================== -->
+<h2 id="w-bulk">Walkthrough 3 · A defence grid in bulk</h2>
+<p>Goal: hand all weapons platforms around a station to another faction, give them a heavier loadout, put them in a ring and number them neatly.</p>
+<figure><a href="manual/bulk.jpg"><img src="manual/bulk.jpg" alt="Bulk editing six weapons platforms" loading="lazy"></a>
+<figcaption>Six weapons platforms selected: shared entries on top, then Move &amp; arrange and Rename series.</figcaption></figure>
+<ol class="steps">
+  <li>Select the platforms: switch the View to <b>Defences</b> and <kbd>Shift</kbd>+click them, or select one and use <span class="menu">Edit → Select all of same archetype</span>.</li>
+  <li><b>Shared entries</b> lists every entry the selected items have. A value shown normally is the same on all of them; <i>mixed · 3 values</i> means they differ (hover to see the values), and <i>4/6</i> means only some have the entry.</li>
+  <li>Type a new <code>reputation</code> (or use <b>…</b> to search factions) — it is set on all six at once. Do the same for <code>loadout</code>. <b>×</b> removes an entry from all; the row at the bottom adds a new entry to all.</li>
+  <li><b>Move &amp; arrange</b>:
+    <ul>
+      <li><b>Offset</b> moves the group by exact metres.</li>
+      <li><b>Rotate group</b> turns the whole group around its centre — positions and orientations — by the angle you type, around Y (as seen on the navmap), X or Z.</li>
+      <li><b>Spread ×</b> pushes everything away from the centre (1.5) or pulls it in (0.5).</li>
+      <li><b>Distribute in a line</b> spaces items evenly between the two farthest apart; <b>Arrange in a circle…</b> puts them on a ring of the radius you choose.</li>
+      <li><b>Same rotation</b> copies the orientation of the item you selected last; <b>Snap</b> rounds positions to the snap step.</li>
+    </ul></li>
+  <li><b>Rename series</b>: the editor guesses a pattern such as <code>Li01_wplatform_{n:2}</code> (<code>{n:2}</code> = 01, 02…). The line below shows the result before you click <b>Rename</b>. References in the system (docking, parents, trade lanes) and jump connections in other systems follow the new names; use <b>References…</b> for missions and other files.</li>
+  <li>Every action is one undo step. Press <kbd>Ctrl</kbd>+<kbd>S</kbd> when you are happy.</li>
+</ol>
+<div class="tip">If the selection mixes objects and zones, <b>Keep only:</b> at the top of the panel narrows it to one kind with a click.</div>
+
+<!-- ============================================================== -->
+<h2 id="w-mission">Walkthrough 4 · A side mission</h2>
+<p>Goal: a job that starts when the player launches from Planet Manhattan — destroy three pirates near the California jump gate for 5,000 credits.</p>
+<figure><a href="manual/msnwizard.jpg"><img src="manual/msnwizard.jpg" alt="New mission wizard" loading="lazy"></a>
+<figcaption><span class="menu">Tools → New mission wizard…</span> — the map shows where the hostiles (or waypoints) will be.</figcaption></figure>
+<ol class="steps">
+  <li>Choose the <b>Mission type</b>: destroy a hostile group, escort a transport, patrol waypoints or courier a package.</li>
+  <li>Pick the <b>Start base</b>; the job starts when the player has docked there and launches.</li>
+  <li><b>Near object</b> and the distance place the action; 🎲 tries another spot nearby.</li>
+  <li>Choose the <b>Hostile faction</b>, the number of ships and their level. Ships come from that faction's random-mission ships for the level — the summary under the map names the ship it picked.</li>
+  <li>Set the reward and check the three texts (start, active, success) the player will read.</li>
+  <li><b>Install as</b>: <i>side job in a story mission</i> runs alongside that story mission; <i>replace a story mission slot</i> makes this the whole mission (for example of a new game). Freelancer only runs the 14 story missions listed in Content.dll, so a new mission always lives in one of their files.</li>
+  <li>Click <b>Create mission</b>, then <kbd>Ctrl</kbd>+<kbd>S</kbd>.</li>
+</ol>
+<h3>Fine-tune it in 3D</h3>
+<figure><a href="manual/missionmap.jpg"><img src="manual/missionmap.jpg" alt="Mission map" loading="lazy"></a>
+<figcaption><span class="menu">Tools → Mission map (3D)…</span> — mission ships, formations, objectives and trigger areas drawn in the system, with real ship models.</figcaption></figure>
+<ul>
+  <li>Every ship, formation, waypoint and trigger area of the mission file is listed on the left and drawn in the system. Select one and drag it with the gizmo, or click <b>Place by click</b>.</li>
+  <li><span class="menu">Tools → Mission scripts…</span> shows the triggers, conditions and actions behind it if you want to go further.</li>
+  <li>To try it: start a new game (or load a save before that story mission), dock at the start base and launch.</li>
+</ul>
+
+<!-- ============================================================== -->
+<h2 id="w-ship">Walkthrough 5 · Check and ship your mod</h2>
+<h3>Pre-flight</h3>
+<figure><a href="manual/preflight.jpg"><img src="manual/preflight.jpg" alt="Pre-flight check" loading="lazy"></a>
+<figcaption><span class="menu">Tools → Pre-flight check (everything)…</span> on the vanilla game. Even the original has a few issues — compare before and after your changes.</figcaption></figure>
+<ul>
+  <li>Pre-flight reads every system, base, market, mission, ship, equipment entry and resource DLL and reports what would crash or misbehave: missing files, unknown nicknames, ids without text, duplicate nicknames.</li>
+  <li><b>errors</b> can crash or break the game, <b>warnings</b> usually show up as something missing, <b>notes</b> are worth a look. Click an entry to see the INI lines; <b>Export CSV</b> for a list to work through.</li>
+</ul>
+<h3>See it in the game</h3>
+<figure class="small"><a href="manual/testkit.jpg"><img src="manual/testkit.jpg" alt="In-game test kit" loading="lazy"></a>
+<figcaption><span class="menu">Help → In-game test kit…</span></figcaption></figure>
+<ul>
+  <li><span class="menu">Tools → Playtest here…</span> (<kbd>F5</kbd>) writes a single-player save that starts in space next to the selected object, with the ship, money and rank you choose, and can start Freelancer. In the game: Load Game → the save whose name starts with “Playtest”.</li>
+  <li>The <b>in-game test kit</b> makes one small, visible change per editor at Planet Manhattan (name, texture, market, news, bar, room, cutscene) so you can confirm in a few minutes that everything the editor writes works in your copy of the game. A snapshot is taken first; <b>Revert test kit</b> undoes it exactly.</li>
+</ul>
+<h3>Package it</h3>
+<figure><a href="manual/mods.jpg"><img src="manual/mods.jpg" alt="Export changes as a mod" loading="lazy"></a>
+<figcaption><span class="menu">File → Mods: export, install, conflicts…</span></figcaption></figure>
+<ol class="steps">
+  <li>Open <span class="menu">File → Mods: export, install, conflicts…</span>. <b>Export my changes as a mod</b> lists every file you changed or created, compared with the original backups.</li>
+  <li>Fill in name, version, author and a short description; untick files that don't belong in the mod.</li>
+  <li><b>Build mod .zip</b> is for other editor users: they install it with <b>Install a mod</b>, which merges it with their own changes and shows conflicts side by side.</li>
+  <li><b>Build player installer (.zip)</b> is for players without the editor: they unpack it and double-click <code>install.cmd</code>. It checks the game version, backs up every file it replaces and stops cleanly if anything fails; <code>uninstall.cmd</code> puts the originals back.</li>
+</ol>
+<figure><a href="manual/trade.jpg"><img src="manual/trade.jpg" alt="Trade planner" loading="lazy"></a>
+<figcaption>Before you release a market change: <span class="menu">Tools → Trade planner &amp; markets…</span> lists the most profitable runs per minute, with the route on the map.</figcaption></figure>
+
+<!-- ============================================================== -->
+<h2 id="bigmods">Discovery &amp; other big mods</h2>
+<p>Everything in this manual works on Discovery Freelancer as well. With a mod that size:</p>
+<ul>
+  <li><b>Map labels.</b> “Sector” entries in <code>universe.ini</code> without a system file are only names on the navmap. They are greyed out in the Systems list and skipped by validation and the route tools.</li>
+  <li><b>Speed.</b> Over 130 systems take a few seconds to load all at once; the trade planner works through more than two million runs in a few seconds and shows the best 300. Use view presets and eye buttons to keep busy systems readable.</li>
+  <li><b>Their conventions are kept.</b> Discovery's market notation, NPC level names and infocard style are read and written the way the mod uses them, so your edits blend in.</li>
+  <li><b>Updates.</b> Discovery updates replace its files. Switch on the <a href="#updates">update patch</a> before you start editing, and your changes can be put back after every update.</li>
+  <li><b>Pre-flight</b> also reports files the mod itself references but does not ship. Compare the list before and after your changes instead of trying to reach zero.</li>
+</ul>
+
+<!-- ============================================================== -->
+<h2 id="updates">Keeping your changes across mod updates</h2>
+<p>A mod update — a new Discovery version, say — replaces the mod's files, and your edits in them are gone. The <b>update patch</b> keeps them safe. It is off until you switch it on.</p>
+<ol class="steps">
+  <li>Open <span class="menu">File → Mods: export, install, conflicts…</span>, tab <b>Update patch</b>, and tick <b>Keep an update patch of my changes</b>.</li>
+  <li>Work as usual. Every <kbd>Ctrl</kbd>+<kbd>S</kbd> also writes <code>editor_patches\my-changes.flpatch.json</code> in the game folder: not whole files but each change on its own — “Li01 · Li01_03 · reputation li_n_grp → li_p_grp”, a new object, a market price, an infocard text. The last ten versions are kept in <code>editor_patches\history</code>.</li>
+  <li>Install the mod update as usual (the editor can stay closed).</li>
+  <li>Start the editor. It notices that files with your changes were replaced and offers <span class="menu">File → ⚠ Re-apply my changes after a mod update…</span>.</li>
+  <li>The re-apply window sorts every change: <b>apply</b> (the update did not touch that spot), <b>already there</b>, <b>decide</b> (the update changed the same thing — you see what it was, what the update has, and yours; pick <i>use mine</i> or <i>keep this version's</i>), and <b>cannot</b> (for example a file the new version no longer has).</li>
+  <li>Leave <b>start a new baseline</b> ticked: the old backups move to <code>editor_backups_old</code>, so Review changes, mod export and the next patch compare with the new version. Click <b>Apply</b>, look around, then <kbd>Ctrl</kbd>+<kbd>S</kbd>.</li>
+</ol>
+<figure><a href="manual/updatepatch.jpg"><img src="manual/updatepatch.jpg" alt="Re-applying a patch after a mod update" loading="lazy"></a>
+<figcaption>Re-applying after an update that changed boron's price and Trenton Outpost's faction too: two decisions, three changes go straight back in. The update's own changes elsewhere stay as they are.</figcaption></figure>
+<div class="tip"><b>Download patch</b> saves the patch as a file — to keep, or to apply to another installation with <b>Re-apply a patch file…</b>. Models, textures and other non-text files travel as whole files; INI files and the texts in resource DLLs travel change by change.</div>
+
+<!-- ============================================================== -->
+<h2 id="keys">Keyboard &amp; mouse</h2>
+<table>
+<tr><th>Left drag · right/middle drag · wheel</th><td>Orbit · pan · zoom to cursor</td></tr>
+<tr><th><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> <kbd>Q</kbd><kbd>E</kbd> (+<kbd>Shift</kbd>)</th><td>Fly (click the view first)</td></tr>
+<tr><th>Click · <kbd>Shift</kbd>+click · double-click</th><td>Select · add to selection · fly to it</td></tr>
+<tr><th><kbd>G</kbd> · <kbd>R</kbd> · <kbd>V</kbd> · <kbd>X</kbd></th><td>Move gizmo · rotate gizmo · select only · world/local axes</td></tr>
+<tr><th><kbd>T</kbd> · <kbd>F</kbd> · <kbd>Home</kbd> · <kbd>L</kbd></th><td>Top view · focus selection · frame all · cycle labels</td></tr>
+<tr><th><kbd>Ctrl</kbd>+<kbd>Z</kbd> / <kbd>Y</kbd> · <kbd>Ctrl</kbd>+<kbd>S</kbd></th><td>Undo / redo · save all</td></tr>
+<tr><th><kbd>Ctrl</kbd>+<kbd>C</kbd> / <kbd>V</kbd> / <kbd>D</kbd> · <kbd>Del</kbd></th><td>Copy / paste (also between systems) / duplicate · delete</td></tr>
+<tr><th><kbd>Ctrl</kbd>+<kbd>A</kbd> · <kbd>Ctrl</kbd>+<kbd>F</kbd></th><td>Select all visible · find in all systems</td></tr>
+<tr><th><kbd>Shift</kbd>+<kbd>A</kbd> · <kbd>Z</kbd></th><td>Add object · draw a zone</td></tr>
+<tr><th><kbd>Ctrl</kbd>+<kbd>I</kbd> · <kbd>Ctrl</kbd>+<kbd>B</kbd> · <kbd>Ctrl</kbd>+<kbd>M</kbd></th><td>Strings &amp; infocards · base characters &amp; news · trade planner</td></tr>
+<tr><th>Right-click</th><td>Context menu (add here, paste here…)</td></tr>
+<tr><th><kbd>F1</kbd></th><td>Reference guide</td></tr>
+</table>
+
+<!-- ============================================================== -->
+<h2 id="trouble">When something goes wrong</h2>
+<table>
+<tr><th>The game crashes after my change</th><td><span class="menu">Tools → Crash &amp; log analyser (FLSpew)…</span> reads the game's log or a crash report and names the function that crashed and the kind of data it handles (loadouts, systems, effects…). Then <span class="menu">File → Review changes…</span> or a snapshot to go back.</td></tr>
+<tr><th>A change doesn't show in the game</th><td>Did you save (<kbd>Ctrl</kbd>+<kbd>S</kbd>)? Bars and news are read when the game starts — restart Freelancer. Run Pre-flight for missing ids or nicknames.</td></tr>
+<tr><th>“File is in use” when saving</th><td>Close Freelancer (and FLServer) and save again.</td></tr>
+<tr><th>A “3D view problem” message appears in the status bar</th><td>One model or texture could not be drawn; the rest of the view keeps working. Hide that object with its eye button if it is in the way, and note the system and object when you report it.</td></tr>
+<tr><th>The editor is slow</th><td>Turn off <span class="menu">View → Models</span> or <span class="menu">Particle effects</span> while you edit layouts; use a view preset to draw less.</td></tr>
+</table>
+<p>More answers in the <a href="guide.html#trouble">reference guide</a>.</p>
+
+</main>
+</div>
+<div id="lightbox"><img alt=""></div>
+<script>
+// click a screenshot to see it full size
+const lb = document.getElementById('lightbox'), li = lb.querySelector('img');
+document.querySelectorAll('figure a').forEach(a => a.addEventListener('click', (e) => { e.preventDefault(); li.src = a.getAttribute('href'); li.alt = a.querySelector('img').alt; lb.style.display = 'flex'; }));
+lb.addEventListener('click', () => { lb.style.display = 'none'; });
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') lb.style.display = 'none'; });
+</script>
+</body>
+</html>
