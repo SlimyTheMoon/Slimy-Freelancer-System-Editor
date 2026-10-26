@@ -263,6 +263,7 @@ class App {
     $('#toolstrip').classList.toggle('hidden', v !== 'system');
     this.currentView = v;
     if (v === 'universe') this.universeMap.show();
+    if (this.props) this.props.render(); // universe map: the system selected there; system view: the open system
   }
   toggleTop() { this.viewport.setView(this.viewport.view === 'top' ? 'persp' : 'top'); this.buildToolstrip(); this.rebuildMenus(); }
   cycleLabels() { const S = this.settings; S.labels = { important: 'all', all: 'none', none: 'important' }[S.labels]; saveSettings(S); this.viewport.applyAllFilters(); this.paths.build(this.sys); this.rebuildMenus(); toast('Labels: ' + S.labels); }

@@ -295,6 +295,9 @@ export class Props {
 
   render() {
     const app = this.app; this.el.innerHTML = ''; this.posInputs = null;
+    // universe map: show the system selected there (not the one open in the 3D view)
+    const uniSel = app.currentView === 'universe' && app.universeMap && app.universeMap.selected;
+    if (uniSel && !(app.sys && app.sys.sys === uniSel)) return this.renderUniverseSystem(uniSel);
     if (!app.sys) return;
     const sel = app.selected();
     if (!sel.length) return this.renderSystem();
@@ -624,10 +627,25 @@ export class Props {
   renderMulti(sel) { this.el.append(bulkPanel(this, sel)); }
 
   // ---------------- system (no selection) ----------------
-  renderSystem() {
-    const app = this.app, game = app.game, doc = app.sys;
+  // a system picked on the universe map: its file is loaded (not opened in the 3D view) and shown like the open one
+  renderUniverseSystem(s) {
+    const app = this.app, game = app.game;
+    if (s.labelOnly) {
+      this.el.append(h('div', { class: 'phead' }, h('div', { class: 'kind' }, 'system'), h('h2', {}, game.name(s.strid) || s.nickname), h('div', { class: 'sub' }, `${s.nickname} · name on the universe map only (no system file)`)));
+      const w = h('div', { class: 'psec' }, h('h3', {}, 'universe.ini [System]')); w.append(this.miniTable(s.section, ['strid_name', 'ids_info', 'pos', 'NavMapScale', 'visit', 'msg_id_prefix', 'file'], app.universeDoc)); this.el.append(w);
+      return;
+    }
+    const doc = app.systemDocs && app.systemDocs.get(s.nickname.toLowerCase());
+    if (doc) return this.renderSystem(doc);
+    this.el.append(h('div', { class: 'phead' }, h('div', { class: 'kind' }, 'system'), h('h2', {}, game.name(s.strid) || s.nickname), h('div', { class: 'sub' }, 'Loading…')));
+    app.loadSystemDoc(s.nickname).then(() => { if (app.currentView === 'universe' && app.universeMap.selected === s) this.render(); })
+      .catch(e => { this.el.append(h('div', { class: 'psec sev-err' }, `Could not load ${s.nickname}: ${e.message}`)); });
+  }
+  renderSystem(docArg = null) {
+    const app = this.app, game = app.game, doc = docArg || app.sys, open = doc === app.sys;
     const uni = doc.sys.section;
-    this.el.append(h('div', { class: 'phead' }, h('div', { class: 'kind' }, 'system'), h('h2', {}, game.name(doc.sys.strid) || doc.nickname), h('div', { class: 'sub' }, `${doc.nickname} · ${doc.path}`)));
+    this.el.append(h('div', { class: 'phead' }, h('div', { class: 'kind' }, open ? 'system' : 'system · selected on the universe map'), h('h2', {}, game.name(doc.sys.strid) || doc.nickname), h('div', { class: 'sub' }, `${doc.nickname} · ${doc.path}`),
+      open ? null : h('div', { style: { marginTop: '6px' } }, h('button', { class: 'btn sm primary', title: 'Open this system in the 3D view (or double-click it on the map)', onclick: () => app.openSystem(doc.nickname) }, 'Open system'))));
     const st = { objects: doc.objects.length, zones: doc.zones.length, lights: doc.lights.length };
     const bases = game.bases.filter(b => (b.system || '').toLowerCase() === doc.nickname.toLowerCase());
     this.el.append(h('div', { class: 'psec' }, h('div', { class: 'stat' }, 'Objects', h('b', {}, st.objects), 'Zones', h('b', {}, st.zones), 'Light sources', h('b', {}, st.lights), 'Bases', h('b', {}, bases.length))));
@@ -647,7 +665,7 @@ export class Props {
     for (const [name, keys, sugg] of sections) {
       const s = doc.ini.first(name);
       const wrap = h('div', { class: 'psec' }, h('h3', {}, `[${name}]`, !s ? h('span', { class: 'act' }, h('button', { class: 'btn sm', onclick: () => app.edit(`Add [${name}]`, () => doc.ini.addSection(name, doc.ini.first('SystemInfo'), keys.map(k => [k, '']))) }, 'Add')) : null));
-      if (s) wrap.append(this.miniTable(s, keys, doc, sugg, name === 'Background' ? () => app.viewport.setBackground(doc) : name === 'Ambient' || name === 'SystemInfo' ? () => { app.viewport.setLighting(doc); app.viewport.setBackground(doc); } : null));
+      if (s) wrap.append(this.miniTable(s, keys, doc, sugg, !open ? null : name === 'Background' ? () => app.viewport.setBackground(doc) : name === 'Ambient' || name === 'SystemInfo' ? () => { app.viewport.setLighting(doc); app.viewport.setBackground(doc); } : null));
       if (name === 'Ambient' && s) {
         const c = (s.vals('color') || ['0', '0', '0']).map(x => Math.max(0, Math.min(255, parseInt(x) || 0)));
         const pk = h('input', { type: 'color', value: '#' + c.map(x => x.toString(16).padStart(2, '0')).join(''), onchange: () => { app.edit('Ambient color', () => s.set('color', [1, 3, 5].map(i => parseInt(pk.value.substr(i, 2), 16)).join(', '))); app.viewport.setLighting(doc); } });
@@ -657,11 +675,12 @@ export class Props {
     }
     if (bases.length) this.el.append(h('div', { class: 'psec' }, h('h3', {}, 'Bases in this system'), h('div', { class: 'reflist' }, bases.map(b => {
       const obj = doc.objects.find(o => (o.get('base') || '').toLowerCase() === b.nickname.toLowerCase());
-      return h('div', { onclick: () => obj && (app.select(obj.id), app.viewport.focus(obj.id)), title: b.file }, `${b.nickname}  ${game.name(b.strid) || ''}${obj ? '' : '  (no object!)'}`);
+      const go = () => { if (!obj) return; if (open) { app.select(obj.id); app.viewport.focus(obj.id); return; } app.openSystem(doc.nickname).then(() => { const o = app.sys && app.sys.objects.find(x => (x.get('base') || '').toLowerCase() === b.nickname.toLowerCase()); if (o) { app.select(o.id); app.viewport.focus(o.id); } }); };
+      return h('div', { onclick: go, title: b.file + (open ? '' : ' — click to open the system at this base') }, `${b.nickname}  ${game.name(b.strid) || ''}${obj ? '' : '  (no object!)'}`);
     }))));
     this.el.append(h('div', { class: 'psec' }, h('div', { class: 'btnrow' },
       h('button', { class: 'btn', onclick: () => dialogs.validation(app, validateSystem(app, doc)) }, 'Validate'),
-      h('button', { class: 'btn', onclick: () => app.rebuildPreload() }, 'Rebuild preload list'),
+      open ? h('button', { class: 'btn', onclick: () => app.rebuildPreload() }, 'Rebuild preload list') : null,
       h('button', { class: 'btn', onclick: () => dialogs.rawIni(app, doc) }, 'Raw INI…'))));
   }
   miniTable(sec, keys, doc, sugg = {}, after = null) {

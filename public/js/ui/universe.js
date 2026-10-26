@@ -34,7 +34,7 @@ export class UniverseMap {
       if (d.sys && d.moved) {
         const s = d.sys, np = s.pos.map(v => Math.round(v * 10) / 10); s.pos = d.start;
         this.app.history.do('Move system on map', [this.app.universeDoc], () => s.section.set('pos', `${fmtNum(np[0], 1)}, ${fmtNum(np[1], 1)}`));
-      } else if (!d.moved && e.button === 0) { this.selected = this.hit(e); this.draw(); }
+      } else if (!d.moved && e.button === 0) { this.selected = this.hit(e); this.draw(); this.app.props && this.app.props.render(); } // properties panel follows the selection
     });
     c.addEventListener('dblclick', (e) => { const s = this.hit(e); if (s) app.openSystem(s.nickname); });
     c.addEventListener('wheel', (e) => {

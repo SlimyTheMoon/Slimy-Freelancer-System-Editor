@@ -2,6 +2,9 @@
 
 All notable changes to the FL System Editor. Versions are tagged `vX.Y.Z` in this repository.
 
+## 1.22.3 — 2026-10-26
+- Universe map: the properties panel now shows the system you click on the map (editable, with an **Open system** button); clicking empty space or returning to the System tab shows the open system again.
+
 ## 1.22.2 — 2026-10-23
 - Keys the game never reads are no longer marked in the properties panel.
 

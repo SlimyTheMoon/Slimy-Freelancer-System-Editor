@@ -2,7 +2,7 @@
   "name": "freelancer-system-editor",
   "displayName": "Freelancer System Editor",
   "description": "3D system, universe, field, encounter, market and resource-DLL editor for Freelancer (2003), inside VS Code.",
-  "version": "1.22.2",
+  "version": "1.22.3",
   "publisher": "fled",
   "license": "MIT",
   "engines": { "vscode": "^1.80.0" },
